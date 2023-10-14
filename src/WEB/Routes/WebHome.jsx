@@ -2,12 +2,23 @@ import React, { useEffect, useState } from "react";
 import TopNav from "../Components/TopNav";
 import Slider1 from "../Assets/Images/slider1_Mesa de trabajo 1.png";
 import Footer from "../Components/Footer";
+import AppointmentForm from "../Components/AppoinementForm";
 
 
 
 const Home = () => {
 
+    const [isPopUpOpen, setPopUpOpen] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null); // State to store the selected doctor data
 
+  const openPopUp = (doctorData) => {
+    setSelectedDoctor(doctorData); // Set the selected doctor data
+    setPopUpOpen(true);
+  };
+
+  const closePopUp = () => {
+    setPopUpOpen(false);
+  };
 
 
     const DoctorData = [
@@ -147,21 +158,29 @@ const Home = () => {
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20 text-center" >
-                                                <button className="px-4 py-2 rounded-md bg-[#627BFE] text-white text-[12px] mx-auto " style={{ display: visibility }}>
+                                                <button className="px-4 py-2 rounded-md bg-[#627BFE] text-white text-[12px] mx-auto " style={{ display: visibility }}
+                                                onClick={() => openPopUp(doctor)}
+                                                >
                                                     Request
                                                 </button>
                                             </td>
+
                                         </tr>
-
-
                                     );
-
-
                                 })}
 
 
                             </table>
                         </div>
+
+                        {isPopUpOpen && selectedDoctor && (
+        <AppointmentForm
+          doctorData={selectedDoctor} // Pass the selected doctor data to AppointmentForm
+          onClose={closePopUp}
+        />
+      )}
+
+      
                     </div>
                 </div>
             </div>
