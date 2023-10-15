@@ -150,6 +150,11 @@ function Login() {
                 </span>
               </div>
 
+              <button
+              type="submit" className="w-full h-[44px] rounded-md text-white text-[16px] bg-gradient-to-r from-[#627BFE] to-[#3D56DA] mt-5">
+                        Login
+              </button>
+
               <div className="w-full flex flex-row justify-between mt-5">
                 <div className="w-2/5 relative h-full">
                   <div className="absolute w-full border-collapse border-b-[1px] border-[#565656] h-1/2 border-opacity-10 top-0"></div>

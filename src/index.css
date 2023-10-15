@@ -24,3 +24,87 @@ code {
 {
   background-color: #56565625;
 }
+
+
+
+
+.child-link {
+  transition: transform 1s ease-in-out;
+}
+
+.child-link-Inactive {
+  /* display: block; */
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.child-link-active {
+ /* display: none; */
+ transform: translateX(-100%);
+  pointer-events: none; 
+}
+/* .child-link-Inactive:hover span
+{
+  color: #627BFE !important;
+  transition: .5s ease-out;
+} */
+
+.sublink{
+  transition: transform 1s ease-in-out;
+}
+
+.sublink-Inactive {
+  /* display: block; */
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.sublink-active {
+ /* display: none; */
+ transform: translateX(-100%);
+  pointer-events: none; 
+}
+
+.sublink:hover span
+{
+ color: #F5F5F5 !important;
+ transition: .5s ease-out;
+ padding-left: 5px;
+}
+
+.MuiDateCalendar-root
+{
+  width: 240px !important;
+  height: 240px !important;
+}
+.MuiPickersCalendarHeader-label
+{
+  font-size: 14 px !important;
+}
+
+
+
+
+#style-7::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgb(255, 255, 255);
+	background-color: #ffffff;
+	border-radius: 5px;
+}
+
+#style-7::-webkit-scrollbar
+{
+	width: 5px;
+	background-color: #Ffffff;
+}
+
+#style-7::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-image: -webkit-gradient(linear,
+									   left bottom,
+									   left top,
+									   color-stop(0.44, #627BFE),
+									   color-stop(0.72, #6a82fc),
+									   color-stop(0.86, #3D56DA));
+}

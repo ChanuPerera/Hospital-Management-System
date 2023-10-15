@@ -5,8 +5,8 @@ import SystemRoutes from "./SYSTEM/Routes";
 function App() {
   return (
     <>
-    <WebRoutes/>
-    {/* <SystemRoutes/> */}
+    {/* <WebRoutes/> */}
+    <SystemRoutes/>
     </>
    
   );
