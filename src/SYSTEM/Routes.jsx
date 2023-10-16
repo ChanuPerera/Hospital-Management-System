@@ -5,16 +5,18 @@ import AdminDashboard from "./Routes/AdminDashboard";
 import Doctor from "./Routes/Doctor";
 import Patient from "./Routes/Patient";
 import Ward from "./Routes/Ward";
+import Appointment from "./Routes/Appointment";
 
 function SystemRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login/>}/>
-        <Route path="AdminDashboard" element={<AdminDashboard/>}/>
-        <Route path="Doctor" element={<Doctor/>}/>
-        <Route path="Patient" element={<Patient/>}/>
-        <Route path="Ward" element={<Ward/>}/>
+        <Route path="/" element={<Login />} />
+        <Route path="AdminDashboard" element={<AdminDashboard />} />
+        <Route path="Doctor" element={<Doctor />} />
+        <Route path="Patient" element={<Patient />} />
+        <Route path="Ward" element={<Ward />} />
+        <Route path="Appointment" element={<Appointment />} />
       </Routes>
     </BrowserRouter>
   );

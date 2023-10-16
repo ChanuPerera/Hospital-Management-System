@@ -9,10 +9,10 @@ function WebRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="MyAppointments" element={<MyAppointments/>}/>
-        <Route path="Login" element={<Login/>}/>
-        <Route path="Register" element={<Register/>}/>
+        <Route path="/" element={<Home />} />
+        <Route path="MyAppointments" element={<MyAppointments />} />
+        <Route path="Login" element={<Login />} />
+        <Route path="Register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );
