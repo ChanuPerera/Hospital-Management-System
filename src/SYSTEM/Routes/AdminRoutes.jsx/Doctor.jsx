@@ -1,74 +1,66 @@
 import React,{useState} from 'react'
-import SideNav from '../Components/SideNav'
+import SideNav from '../../Components/SideNav'
 import { Search, Menu, Logout, ArrowForwardIos, NotificationsActive, Add } from "@mui/icons-material";
-import PatientEdit from '../Components/PatientEdit';
-import PatientForm from '../Components/PatientForm';
+import DoctorEdit from '../../Components/DoctorEdit';
+import DoctorForm from '../../Components/DoctorForm';
 
-
-
-
-
-
-function Patient() {
+function Doctor() {
 
 
 
   const [isPopUpOpen, setPopUpOpen] = useState(false);
-  const [isPatientFormPopUpOpen, setPatientFormPopUpOpen] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState(null); // State to store the selected doctor data
+  const [selectedDoctor, setSelectedDoctor] = useState(null); // State to store the selected doctor data
 
-  const openPopUp = (PatientData) => {
-    setSelectedPatient(PatientData); // Set the selected doctor data
+  const openPopUp = (doctorData) => {
+    setSelectedDoctor(doctorData); // Set the selected doctor data
     setPopUpOpen(true);
   };
-
-
 
   const closePopUp = () => {
     setPopUpOpen(false);
   };
 
 
-  
+  const [isDoctorFormPopUpOpen, setDoctorFormPopUpOpen] = useState(false);
   const openFormPopUp = () =>{
-    setPatientFormPopUpOpen(true);
+    setDoctorFormPopUpOpen(true);
   }
   const closeFormPopUp = () =>{
-    setPatientFormPopUpOpen(false);
+    setDoctorFormPopUpOpen(false);
   }
 
 
 
 
-    const PatientData = [
+
+    const DoctorData = [
         {
             name: "G. Dinesh Karunarathne",
-            age:"46",
-            address: "12/A, Temple rd, kasbawa",
+            specialize: "Cancer Surgeon",
+            hospital: "City Hospital - Colombo",
             contact:"0775887741",
-            email: "md@gmail.com",
-            appointmentNo:"36845",
-            payment: "Completed"
+            datetime: "Mon -7.00 PM , Sat-8.30 AM",
+            roomno:"35",
+            status: "Arrived"
         },
         {
-            name: "G. Dinesh Karunarathne",
-            age:"46",
-            address: "12/A, Temple rd, kasbawa",
+            name: "L.D.K Opanayake",
+            specialize: "Anaesthetist",
+            hospital: "City Hospital - Colombo",
             contact:"0775887741",
-            email: "md@gmail.com",
-            appointmentNo:"36845",
-            payment: "Completed"
+            datetime: "Mon -7.00 PM , Sat-8.30 AM",
+            roomno:"11",
+            status: "Leave"
         },
         {
-            name: "G. Dinesh Karunarathne",
-            age:"46",
-            address: "12/A, Temple rd, kasbawa",
+            name: "Pushpika Senarathne",
+            specialize: "Clinical Physiologist",
+            hospital: "Lanka Hospital - Colombo",
             contact:"0775887741",
-            email: "md@gmail.com",
-            appointmentNo:"36845",
-            payment: "Pending"
+            datetime: "Mon -7.00 PM , Sat-8.30 AM",
+            roomno:"28",
+            status: "Arrived"
         },
-       
     ]
 
 
@@ -81,7 +73,7 @@ function Patient() {
 
       <div className='page-body-wrapper lg:w-5/6 bg-[#ffffff] h-screen mx-auto flex flex-col fixed right-0' id="style-7">
           <div className='page-body-content p-10'>
-            <h3 className='text-[18pt]  text-[#002459] font-semibold'>Patients</h3>
+            <h3 className='text-[18pt]  text-[#002459] font-semibold'>Doctors</h3>
 
 
             <div className='flex flex-row space-x-2 w-full mt-5'>
@@ -90,9 +82,9 @@ function Patient() {
                 <button className='text-[#ffffff] text-[14px] px-4 py-2 rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA]'
                  onClick={() => openFormPopUp()}
                  
-                 > <span><Add className="mr-1"/>Add new Patient</span>
-                {isPatientFormPopUpOpen && (
-        <PatientForm
+                 > <span><Add className="mr-1"/>Add new Doctor</span>
+                {isDoctorFormPopUpOpen && (
+        <DoctorForm
           onClose={closeFormPopUp}
         />
       )}
@@ -107,20 +99,19 @@ function Patient() {
                             <table className="appointment-availability-table w-full bg-white border-[#565656] border-opacity-20 border-[1px]">
                                 <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">#</th>
                                 <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Name</th>
-                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Age</th>
-                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Address</th>
+                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Specialize</th>
                                 <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Contact</th>
-                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Email</th>
-                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Appointment No</th>
-                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Payment</th>
+                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Date & Time</th>
+                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Room NO</th>
+                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Status</th>
                                 <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 ">Action</th>
 
 
-                                {PatientData.map((patient, index) => {
+                                {DoctorData.map((doctor, index) => {
 
                                     let textColor;
                                     let visibility;
-                                    if (patient.payment === "Completed") {
+                                    if (doctor.status === "Arrived") {
                                         textColor = "#2CA74F";
                                         
                                     } else {
@@ -139,38 +130,36 @@ function Patient() {
                                                 {index+1}
                                             </td>
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.name}
+                                                {doctor.name}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.age}
+                                                {doctor.specialize}
+                                            </td>
+
+                                        
+
+                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
+                                                {doctor.contact}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.address}
-                                            </td>
-
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.contact}
-                                            </td>
-
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.email}
+                                                {doctor.datetime}
                                             </td>
 
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.appointmentNo}
+                                                {doctor.roomno}
                                             </td>
 
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20" style={{ color: textColor }}>
-                                                {patient.payment}
+                                                {doctor.status}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20 text-center" >
                                                 <button className="px-4 py-2 rounded-md bg-[#627BFE] text-white text-[12px] mx-auto "
-                                                onClick={() => openPopUp(patient)}
+                                                onClick={() => openPopUp(doctor)}
                                                 >
                                                     Edit
                                                 </button>
@@ -184,9 +173,9 @@ function Patient() {
                             </table>
                         </div>
 
-                        {isPopUpOpen && selectedPatient && (
-        <PatientEdit
-          PatientData={selectedPatient} 
+                        {isPopUpOpen && selectedDoctor && (
+        <DoctorEdit
+          doctorData={selectedDoctor} 
           onClose={closePopUp}
         />
       )}
@@ -206,4 +195,4 @@ function Patient() {
   )
 }
 
-export default Patient;
+export default Doctor;

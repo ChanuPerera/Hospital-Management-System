@@ -1,15 +1,15 @@
 import React from 'react'
-import SideNav from '../Components/SideNav'
+import SideNav from "../../Components/SideNav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
-import DashboardRightPanel from '../Components/DashboardRightPanel';
+import DashboardRightPanel from '../../Components/DashboardRightPanel';
 import * as Icons from "@mui/icons-material";
 // import { hover } from '@testing-library/user-event/dist/hover';
 import { ChevronRight } from "@mui/icons-material";
 import { Search, Menu, Logout, ArrowForwardIos, NotificationsActive } from "@mui/icons-material";
-import AppointmentScheduling from "../Assets/Images/AppointmentScheduling.png";
-import MedicalDoctor from "../Assets/Images/MedicalDoctor.png";
-import NurseCall from "../Assets/Images/NurseCall.png";
+import AppointmentScheduling from "../../Assets/Images/AppointmentScheduling.png";
+import MedicalDoctor from "../../Assets/Images/MedicalDoctor.png";
+import NurseCall from "../../Assets/Images/NurseCall.png";
 
 function AdminDashboard() {
   return (

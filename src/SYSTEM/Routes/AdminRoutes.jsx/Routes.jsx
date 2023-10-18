@@ -1,13 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./Routes/Login";
-import AdminDashboard from "./Routes/AdminDashboard";
-import Doctor from "./Routes/Doctor";
-import Patient from "./Routes/Patient";
-import Ward from "./Routes/Ward";
-import Appointment from "./Routes/Appointment";
 
-function SystemRoutes() {
+import Login from "./Login";
+import Doctor from "./Doctor";
+import Patient from "./Patient";
+import AdminDashboard from "./AdminDashboard";
+import Appointment from "./Appointment";
+import Ward from "./Ward";
+
+function AdminRoutes() {
   return (
     <BrowserRouter>
       <Routes>
@@ -22,4 +23,4 @@ function SystemRoutes() {
   );
 }
 
-export default SystemRoutes;
+export default AdminRoutes;
