@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import SideNav from "../../Components/SideNav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -10,8 +10,35 @@ import { Search, Menu, Logout, ArrowForwardIos, NotificationsActive } from "@mui
 import AppointmentScheduling from "../../Assets/Images/AppointmentScheduling.png";
 import MedicalDoctor from "../../Assets/Images/MedicalDoctor.png";
 import NurseCall from "../../Assets/Images/NurseCall.png";
+import PatientForm from '../../Components/PatientForm';
+import AppointmentForm from '../../Components/AppointmentForm';
 
 function AdminDashboard() {
+
+
+  const [isPatientFormPopUpOpen, setPatientFormPopUpOpen] = useState(false);
+  const [isAppointmentFormPopUpOpen, setAppointmentFormPopUpOpen] = useState(false);
+
+  const openPatientFormPopUp = () =>{
+    setPatientFormPopUpOpen(true);
+  }
+  const closePatinetFormPopUp = () =>{
+    setPatientFormPopUpOpen(false);
+  }
+
+
+  const openAppointmentFormPopUp = () =>{
+    setAppointmentFormPopUpOpen(true);
+  }
+  const closeAppointmentFormPopUp = () =>{
+    setAppointmentFormPopUpOpen(false);
+  }
+
+
+
+  
+
+
   return (
     <div className='w-full h-screen flex flex-row justify-between'>
       <SideNav />
@@ -26,7 +53,8 @@ function AdminDashboard() {
 
             <div className='flex flex-row justify-start space-x-5 items-center w-full mt-5'>
 
-              <div className='w-2/6 rounded-md p-5 flex flex-row justify-center items-center bg-gradient-to-r from-[#627BFE] to-[#3D56DA] '>
+              <div className='w-2/6 rounded-md p-5 flex cursor-pointer flex-row justify-center items-center bg-gradient-to-r from-[#627BFE] to-[#3D56DA] '
+               onClick={() => openPatientFormPopUp()}>
                 <div className='flex flex-col w-2/3'>
                   <span className='text-[#e3e3e3] text-[14px]'>Admit new</span>
                   <h4 className='uppercase text-white font-semibold text-[18pt]'>Patient</h4>
@@ -34,10 +62,21 @@ function AdminDashboard() {
                 <div className='flex flex-col w-1/3 justify-center items-center text-white'>
                   <ArrowForwardIos />
                 </div>
+
+                {
+                  isPatientFormPopUpOpen && (
+                    <PatientForm
+                    onClose={closePatinetFormPopUp}/>
+                  )
+                }
+              
+              
               </div>
 
 
-              <div className='w-2/6 rounded-md p-5 flex flex-row justify-center items-center bg-gradient-to-r from-[#627BFE] to-[#3D56DA] '>
+              <div className='w-2/6 rounded-md p-5 cursor-pointer flex flex-row justify-center items-center bg-gradient-to-r from-[#627BFE] to-[#3D56DA] ' 
+              onClick={() => openAppointmentFormPopUp()}
+              >
                 <div className='flex flex-col w-2/3'>
                   <span className='text-[#e3e3e3] text-[14px]'>Make new</span>
                   <h4 className='uppercase text-white font-semibold text-[18pt]'>Appointment</h4>
@@ -45,6 +84,13 @@ function AdminDashboard() {
                 <div className='flex flex-col w-1/3 justify-center items-center text-white'>
                   <ArrowForwardIos />
                 </div>
+
+                {
+                  isAppointmentFormPopUpOpen && (
+                    <AppointmentForm
+                    onClose={closeAppointmentFormPopUp}/>
+                  )
+                }
               </div>
 
               <div className='w-[80px] h-[80px] bg-[#627BFE] rounded-full flex justify-center items-center text-white'>

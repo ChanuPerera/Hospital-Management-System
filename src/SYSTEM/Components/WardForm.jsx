@@ -5,45 +5,23 @@ import Popup from 'reactjs-popup';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 
-const AppointmentForm = ({ onClose }) => {
+const WardForm = ({ onClose }) => {
 
 
-    const AppointmentSchema = Yup.object().shape({
-      firstName: Yup.string()
-        .min(2, "Too Short!")
-        .max(50, "Too Long!")
-        .matches(/^[A-Za-z]+$/, "Must be only Letters")
-        .required("Required"),
-      lastName: Yup.string()
-        .min(2, "Too Short!")
-        .max(50, "Too Long!")
-        .matches(/^[A-Za-z]+$/, "Must be only Letters")
-        .required("Required"),
-      doctorName: Yup.string()
-        .min(2, "Too Short!")
-        .max(50, "Too Long!")
-        .matches(/^[A-Za-z]+$/, "Must be only Letters")
-        .required("Required"),
-      date: Yup.string()
-            .required("Required"),
-        time: Yup.string()
-      .required('Required'),
-      address: Yup.string().min(2, "Too Short!").required("Required"),
-      age: Yup.string()
-        .matches(
-          /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/,
-          "Must be only Digits"
-        )
-        .required("Required"),
-      contactNumber: Yup.string()
-        .min(10, "Invalid Number")
-        .matches(
-          /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/,
-          "Must be only Digits"
-        )
-        .required("Required"),
-      email: Yup.string().email("Invalid email").required("Required"),
-      gender: Yup.string().required("Gender is required"),
+    const WardSchema = Yup.object().shape({
+        buildingNo: Yup.string()
+            .max(50, 'Too Long!')
+            .required('Required'),
+        section: Yup.string()
+            .max(50, 'Too Short!')
+            .required('Required'),
+        wardNo: Yup.string()
+            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
+            .required('Required'),
+        noOfBeds: Yup.string()
+            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
+            .required('Required'),
+        gender: Yup.string().required('Gender is required'),
     });
 
 
@@ -65,36 +43,19 @@ const AppointmentForm = ({ onClose }) => {
                             <FontAwesomeIcon icon={faClose} />
                         </div>
                     </div>
-                    <div className='flex flex-row justify-start mt-1'>
-                        {/* <div className='flex flex-col'>
-                            <h3 className='text-[#565656]'> <span className='text-[#627BFE] font-semibold'>Dr.{doctorData.name} </span></h3>
-                            <p>Specialize: {doctorData.specialize}</p>
-                            <p>Time: {doctorData.datetime}</p>
-                        </div> */}
-
-                        <div className='flex flex-col'>
-                            <h3 className='text-[1.2rem] font-semibold text-[#565656]'>Reference no : 654996</h3>
-                            <h3 className='text-[1rem] font-semibold text-[#565656]'>Appointment no : 3</h3>
-                        </div>
-                    </div>
-
-
-
-                    <h3 className='text-[#627BFE] text-[16px] mt-3 text-center'>Appointment Form</h3>
-                    <h3 className='text-[#565656 text-[14px] mt-1 mb-3 text-center'>Fill Patient Details</h3>
+ 
+                    <h3 className='text-[#627BFE] text-[16px] mt-3 text-center'>Ward Details</h3>
 
                     <Formik
                         initialValues={{
-                            firstName: "",
-                            lastName: "",
-                            age: "",
-                            contactNumber: "",
-                            email: "",
+                            buildingNo: "",
+                            section: "",
+                            wardNo: "",
+                            noOfBeds: "",
                             gender: '',
-                            address:"",
 
                         }}
-                        validationSchema={AppointmentSchema}
+                        validationSchema={WardSchema}
                         onSubmit={(values) => {
                             console.log(values);
                         }}
@@ -109,10 +70,10 @@ const AppointmentForm = ({ onClose }) => {
                                     <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
                                         <div className="form-field-label sm:flex justify-between w-full hidden">
                                             <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                                First Name <span className='text-red-700'>*</span>
+                                                Building No <span className='text-red-700'>*</span>
                                             </span>
                                             <ErrorMessage
-                                                name="firstName"
+                                                name="buildingNo"
                                                 component="span"
                                                 className="text-red-600 text-[12px]"
                                             />
@@ -121,14 +82,14 @@ const AppointmentForm = ({ onClose }) => {
 
                                             <Field
                                                 type="text"
-                                                name="firstName"
-                                                placeholder="First Name"
+                                                name="buildingNo"
+                                                placeholder="Building No"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
                                         </div>
                                         <ErrorMessage
-                                            name="firstName"
+                                            name="buildingNo"
                                             component="span"
                                             className="text-red-600 text-[12px] block sm:hidden"
                                         />
@@ -138,10 +99,10 @@ const AppointmentForm = ({ onClose }) => {
                                     <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
                                         <div className="form-field-label sm:flex justify-between w-full hidden">
                                             <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                                Last Name<span className='text-red-700'>*</span>
+                                                Section<span className='text-red-700'> *</span>
                                             </span>
                                             <ErrorMessage
-                                                name="lastName"
+                                                name="section"
                                                 component="span"
                                                 className="text-red-600 text-[12px]"
                                             />
@@ -150,14 +111,14 @@ const AppointmentForm = ({ onClose }) => {
 
                                             <Field
                                                 type="text"
-                                                name="lastName"
-                                                placeholder="Last Name"
+                                                name="section"
+                                                placeholder="Section"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
                                         </div>
                                         <ErrorMessage
-                                            name="lastName"
+                                            name="section"
                                             component="span"
                                             className="text-red-600 text-[12px] block sm:hidden"
                                         />
@@ -173,11 +134,11 @@ const AppointmentForm = ({ onClose }) => {
                                     <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
                                         <div className="form-field-label sm:flex justify-between w-full hidden">
                                             <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                                Age <span className='text-red-700'>*</span>
+                                                Ward No <span className='text-red-700'>*</span>
                                             </span>
                                             <ErrorMessage
-                                                name="age"
-                                                component="span"
+                                                name="wardNo"
+                                                component="wardNo"
                                                 className="text-red-600 text-[12px]"
                                             />
                                         </div>
@@ -185,14 +146,14 @@ const AppointmentForm = ({ onClose }) => {
 
                                             <Field
                                                 type="text"
-                                                name="age"
-                                                placeholder="Age"
+                                                name="wardNo"
+                                                placeholder="Ward No"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
                                         </div>
                                         <ErrorMessage
-                                            name="age"
+                                            name="wardNo"
                                             component="span"
                                             className="text-red-600 text-[12px] block sm:hidden"
                                         />
@@ -229,10 +190,10 @@ const AppointmentForm = ({ onClose }) => {
                                 <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
                                     <div className="form-field-label sm:flex justify-between w-full hidden">
                                         <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                            Address
+                                        No Of Beds
                                         </span>
                                         <ErrorMessage
-                                            name="address"
+                                            name="noOfBeds"
                                             component="span"
                                             className="text-red-600 text-[12px]"
                                         />
@@ -241,20 +202,20 @@ const AppointmentForm = ({ onClose }) => {
 
                                         <Field
                                             type="text"
-                                            name="address"
-                                            placeholder="Address"
+                                            name="noOfBeds"
+                                            placeholder="No Of Beds"
                                             className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                             required
                                         />
                                     </div>
                                     <ErrorMessage
-                                        name="address"
+                                        name="noOfBeds"
                                         component="span"
                                         className="text-red-600 text-[12px] block sm:hidden"
                                     />
                                 </div>
 
-                                <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
+                                {/* <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
                                     <div className="form-field-label sm:flex justify-between w-full hidden">
                                         <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
                                             Contact Number <span className='text-red-700'>*</span>
@@ -280,7 +241,7 @@ const AppointmentForm = ({ onClose }) => {
                                         component="span"
                                         className="text-red-600 text-[12px] block sm:hidden"
                                     />
-                                </div>
+                                </div> */}
 
 
 
@@ -322,7 +283,7 @@ const AppointmentForm = ({ onClose }) => {
 
 
                                 <button className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
-                                    Submit Appointment 
+                                    Add Ward
                                 </button>
 
 
@@ -345,7 +306,7 @@ const AppointmentForm = ({ onClose }) => {
     );
 };
 
-export default AppointmentForm;
+export default WardForm;
 
 
 

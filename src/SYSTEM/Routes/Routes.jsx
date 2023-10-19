@@ -6,7 +6,7 @@ import AdminRoutes from "./AdminRoutes/Routes";
 function SystemRoutes() {
 
 
-    const login = "doctor"
+    const login = "admin"
 
     return (
         <>

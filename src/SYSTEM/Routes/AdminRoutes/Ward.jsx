@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import SideNav from '../../Components/SideNav'
 import { Search, Menu, Logout, ArrowForwardIos, NotificationsActive, Add } from "@mui/icons-material";
 import PatientEdit from '../../Components/PatientEdit';
-import PatientForm from '../../Components/PatientForm';
+import WardForm from '../../Components/WardForm';
 
 
 
@@ -13,60 +13,58 @@ function Ward() {
 
 
 
-  const [isPopUpOpen, setPopUpOpen] = useState(false);
-  const [isPatientFormPopUpOpen, setPatientFormPopUpOpen] = useState(false);
+  // const [isPopUpOpen, setPopUpOpen] = useState(false);
+  const [isWardFormPopUpOpen, setWardFormPopUpOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null); // State to store the selected doctor data
 
-  const openPopUp = (PatientData) => {
-    setSelectedPatient(PatientData); // Set the selected doctor data
-    setPopUpOpen(true);
-  };
+  // const openPopUp = (PatientData) => {
+  //   setSelectedPatient(PatientData); // Set the selected doctor data
+  //   setPopUpOpen(true);
+  // };
 
 
 
-  const closePopUp = () => {
-    setPopUpOpen(false);
-  };
+  // const closePopUp = () => {
+  //   setPopUpOpen(false);
+  // };
 
 
   
   const openFormPopUp = () =>{
-    setPatientFormPopUpOpen(true);
+    setWardFormPopUpOpen(true);
   }
   const closeFormPopUp = () =>{
-    setPatientFormPopUpOpen(false);
+    setWardFormPopUpOpen(false);
   }
 
 
 
 
-    const PatientData = [
+    const WardData = [
         {
-            name: "G. Dinesh Karunarathne",
-            age:"46",
-            address: "12/A, Temple rd, kasbawa",
-            contact:"0775887741",
-            email: "md@gmail.com",
-            appointmentNo:"36845",
-            payment: "Completed"
+            buildingno: "1",
+            section:"Admissions ward",
+            wardno: "2",
+            nofBeds:"18",
+            avBeds: "3",
+            gender:"Male",
+
         },
         {
-            name: "G. Dinesh Karunarathne",
-            age:"46",
-            address: "12/A, Temple rd, kasbawa",
-            contact:"0775887741",
-            email: "md@gmail.com",
-            appointmentNo:"36845",
-            payment: "Completed"
+          buildingno: "2B",
+          section:"General medicine ward",
+          wardno: "1",
+          nofBeds:"24",
+          avBeds: "8",
+          gender:"Female",
         },
         {
-            name: "G. Dinesh Karunarathne",
-            age:"46",
-            address: "12/A, Temple rd, kasbawa",
-            contact:"0775887741",
-            email: "md@gmail.com",
-            appointmentNo:"36845",
-            payment: "Pending"
+            buildingno: "2",
+            section:"ICU ward",
+            wardno: "1",
+            nofBeds:"12",
+            avBeds: "2",
+            gender:"Male",
         },
        
     ]
@@ -91,8 +89,8 @@ function Ward() {
                  onClick={() => openFormPopUp()}
                  
                  > <span><Add className="mr-1"/>Add new Ward</span>
-                {isPatientFormPopUpOpen && (
-        <PatientForm
+                {isWardFormPopUpOpen && (
+        <WardForm
           onClose={closeFormPopUp}
         />
       )}
@@ -112,22 +110,13 @@ function Ward() {
                                 <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">No of Beds</th>
                                 <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">No of Available Beds</th>
                                 {/* <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Appointment No</th> */}
-                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Patient Gender</th>
+                                <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">Gender</th>
                                 {/* <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 ">Action</th> */}
 
 
-                                {PatientData.map((patient, index) => {
+                                {WardData.map((ward, index) => {
 
-                                    let textColor;
-                                    let visibility;
-                                    if (patient.payment === "Completed") {
-                                        textColor = "#2CA74F";
-                                        
-                                    } else {
-                                        textColor = "#A72C2C";
-                                        
-                                    }
-
+                                
 
 
 
@@ -139,28 +128,28 @@ function Ward() {
                                                 {index+1}
                                             </td>
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.name}
+                                                {ward.buildingno}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.age}
+                                                {ward.section}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.address}
+                                                {ward.wardno}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.contact}
+                                                {ward.nofBeds}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.email}
+                                                {ward.avBeds}
                                             </td>
 
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {patient.appointmentNo}
+                                                {ward.gender}
                                             </td>
 
 
@@ -184,10 +173,9 @@ function Ward() {
                             </table>
                         </div>
 
-                        {isPopUpOpen && selectedPatient && (
+                        {isWardFormPopUpOpen &&  (
         <PatientEdit
-          PatientData={selectedPatient} 
-          onClose={closePopUp}
+          onClose={closeFormPopUp}
         />
       )}
 
