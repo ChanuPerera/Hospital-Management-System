@@ -82,14 +82,15 @@ function DoctorDashboard() {
         <div className="nav-logo font-link w-full lg:flex justify-center hidden ">
           <span className="text-[4rem]  text-[#627BFE] font-link">e-</span><span className="text-[4rem]  text-[#002459] font-link">Doc</span>
         </div>
-
-        <div className="h-screen w-full p-3  overflow-y-auto" id="style-7">
-          <div className="flex flex-row justify-between items-center py-2 border-collapse border-b-[1px] border-opacity-10 border-[#565656]">
+        <div className="flex flex-row justify-between items-center py-2 border-collapse border-b-[1px] border-opacity-10 border-[#565656] p-3">
             <h3 className='text-[12pt]  text-[#002459] font-semibold'>Patients List</h3>
             <div className="px-6 py-2 text-[10pt] text-white bg-[#627BFE] rounded-full flex justify-center items-center">
               38
             </div>
-          </div>
+        </div>
+
+        <div className="h-screen w-full p-3  overflow-y-auto" id="style-7">
+          
 
           <ul className='flex flex-col mt-5'>
 
@@ -122,11 +123,19 @@ function DoctorDashboard() {
 
       <div className='page-body-wrapper lg:w-4/6 sm:w-5/6 bg-[#ffffff] mx-auto'>
         <div className='page-body-content p-10'>
-          <h3 className='text-[18pt]  text-[#002459] font-semibold'>Welcome Dr. P.J Liyanage</h3>
+          <div className='flex flex-row justify-between items-center'>
+            <h3 className='text-[18pt]  text-[#002459] font-semibold'>Welcome Dr. P.J Liyanage</h3>
+            <div className='px-4 py-2 border-[1px] rounded-lg border-[#002459] bg-[#ffffff] flex items-center justify-center '>
+                <span className='text-[12pt] text-[#002459]'>
+                  Next in Queue : Nimsara Lakshani
+                </span>
+            </div>
+          </div>
+         
 
           <div className='flex flex-col justify-start space-y-5  w-full mt-5'>
 
-            <h3 className='text-[14pt]  text-[#002459] font-semibold'>Consultation</h3>
+            <h3 className='text-[14pt]  text-[#002459] font-semibold py-2 bg-slate-100 px-2'>Consultation</h3>
 
             <div className='flex flex-row justify-between  items-center w-2/3 mx-auto'>
               <div className=' flex flex-col w-full'>
@@ -173,7 +182,32 @@ function DoctorDashboard() {
 
           </div>
 
-          <div className='flex flex-row justify-start space-x-5 items-center w-full mt-5'>
+          <div className='flex flex-col justify-start space-y-5  w-full mt-5'>
+
+            <h3 className='text-[14pt]  text-[#002459] font-semibold py-2 bg-slate-100 px-2'>Prescription</h3>
+
+            <div className='flex flex-row justify-between items-center w-2/3  mx-auto space-x-5'>
+              <div className=' flex flex-col w-3/4'>
+                <input type='text' className='p-2 border-[1px] border-[#565656] border-opacity-25 rounded-lg w-full text-[#565656]' placeholder='Sandeepani Kumari' readOnly />
+              </div>
+              <div className='flex flex-col w-1/4'>
+              <input type='text' className='p-2 border-[1px] border-[#565656] border-opacity-25 rounded-lg w-full text-[#565656]' placeholder='42' readOnly />
+              </div>
+            </div>
+
+            <div className='flex flex-col justify-between  items-center w-2/3 mx-auto'>
+              <textarea type='text' className='p-2 border-[1px] border-[#565656] border-opacity-25 rounded-lg w-full text-[#565656] resize-none overflow-y-auto' placeholder='Diagnosis' rows={10} id="style-7"/>
+            </div>
+
+
+            <div className='flex flex-row justify-between  items-center w-2/3 mx-auto'>
+              
+              <h3 className='text-[14pt]  text-[#002459] font-semibold'> Dr. P.J Liyanage</h3>
+            
+
+            <button className='px-4 py-2 rounded-lg text-white capitalize bg-gradient-to-r from-[#627BFE] to-[#3D56DA]'>Upload Prescription</button>
+            </div>
+
 
 
 
