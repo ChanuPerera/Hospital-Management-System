@@ -4,36 +4,43 @@ import React from 'react';
 import Popup from 'reactjs-popup';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import axios from 'axios';
+import config from '../../config';
+
+
 
 const DoctorForm = ({ onClose }) => {
 
 
     const AppointmentSchema = Yup.object().shape({
-        firstName: Yup.string()
+        name: Yup.string()
             .min(2, 'Too Short!')
-            .max(50, 'Too Long!')
-            .matches(/^[A-Za-z]+$/, "Must be only Letters")
+            .matches(/^[A-Za-z .]+$/, "Must be only Letters")
             .required('Required'),
-        lastName: Yup.string()
+        specialize: Yup.string()
             .min(2, 'Too Short!')
-            .max(50, 'Too Long!')
-            .matches(/^[A-Za-z]+$/, "Must be only Letters")
-            .required('Required'),
-        address: Yup.string()
-            .min(2, 'Too Short!')
-            .required('Required'),
-        age: Yup.string()
-            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
+            .matches(/^[A-Za-z .]+$/, "Must be only Letters")
             .required('Required'),
         contactNumber: Yup.string()
             .min(10, 'Invalid Number')
             .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
             .required('Required'),
-        email: Yup.string().email('Invalid email')
-            .required('Required'),
         gender: Yup.string().required('Gender is required'),
     });
 
+
+
+
+    const handleAddNewDoctor = async (values) => {
+        try {
+            console.log('Form Data:', values);
+            const response = await axios.post(`${config.baseUrl}/addNewDoctor`, values);
+            console.log('Response:', response.data);
+            onClose();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
 
   
@@ -54,16 +61,7 @@ const DoctorForm = ({ onClose }) => {
                         </div>
                     </div>
                     <div className='flex flex-row justify-start mt-1'>
-                        {/* <div className='flex flex-col'>
-                            <h3 className='text-[#565656]'> <span className='text-[#627BFE] font-semibold'>Dr.{doctorData.name} </span></h3>
-                            <p>Specialize: {doctorData.specialize}</p>
-                            <p>Time: {doctorData.datetime}</p>
-                        </div> */}
-
-                        {/* <div className='flex flex-col'>
-                            <h3 className='text-[1.2rem] font-semibold text-[#565656]'>Reference no : 654996</h3>
-                            <h3 className='text-[1rem] font-semibold text-[#565656]'>Appointment no : 3</h3>
-                        </div> */}
+                
                     </div>
 
 
@@ -72,21 +70,16 @@ const DoctorForm = ({ onClose }) => {
 
                     <Formik
                         initialValues={{
-                            firstName: "",
-                            lastName: "",
-                            age: "",
+                            name: "",
+                            specialize: "",
                             contactNumber: "",
-                            email: "",
                             gender: '',
-                            address:"",
 
                         }}
                         validationSchema={AppointmentSchema}
-                        onSubmit={(values) => {
-                            console.log(values);
-                        }}
+            onSubmit={handleAddNewDoctor}
                     >
-                        {({ errors, touched }) => (
+                        {({ errors, touched, values,handleChange }) => (
                             <Form className="flex flex-col mb-[24px] w-full ">
 
 
@@ -96,10 +89,12 @@ const DoctorForm = ({ onClose }) => {
                                     <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
                                         <div className="form-field-label sm:flex justify-between w-full hidden">
                                             <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                                First Name <span className='text-red-700'>*</span>
+                                                Name <span className='text-red-700'>*</span>
                                             </span>
                                             <ErrorMessage
-                                                name="firstName"
+                                                name="name"
+                                                value={values.name}
+                                                onChange={handleChange}
                                                 component="span"
                                                 className="text-red-600 text-[12px]"
                                             />
@@ -108,14 +103,14 @@ const DoctorForm = ({ onClose }) => {
 
                                             <Field
                                                 type="text"
-                                                name="firstName"
-                                                placeholder="First Name"
+                                                name="name"
+                                                placeholder="Name with Initials"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
                                         </div>
                                         <ErrorMessage
-                                            name="firstName"
+                                            name="name"
                                             component="span"
                                             className="text-red-600 text-[12px] block sm:hidden"
                                         />
@@ -125,10 +120,10 @@ const DoctorForm = ({ onClose }) => {
                                     <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
                                         <div className="form-field-label sm:flex justify-between w-full hidden">
                                             <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                                Last Name<span className='text-red-700'>*</span>
+                                                Specialize<span className='text-red-700'>*</span>
                                             </span>
                                             <ErrorMessage
-                                                name="lastName"
+                                                name="specialize"
                                                 component="span"
                                                 className="text-red-600 text-[12px]"
                                             />
@@ -137,14 +132,16 @@ const DoctorForm = ({ onClose }) => {
 
                                             <Field
                                                 type="text"
-                                                name="lastName"
-                                                placeholder="Last Name"
+                                                name="specialize"
+                                                value={values.specialize}
+                                                onChange={handleChange}
+                                                placeholder="Specialize in"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
                                         </div>
                                         <ErrorMessage
-                                            name="lastName"
+                                            name="specialize"
                                             component="span"
                                             className="text-red-600 text-[12px] block sm:hidden"
                                         />
@@ -157,33 +154,35 @@ const DoctorForm = ({ onClose }) => {
 
 
                                 <div className='w-full flex flex-row justify-between space-x-3'>
-                                    <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
-                                        <div className="form-field-label sm:flex justify-between w-full hidden">
-                                            <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                                Age <span className='text-red-700'>*</span>
-                                            </span>
-                                            <ErrorMessage
-                                                name="age"
-                                                component="span"
-                                                className="text-red-600 text-[12px]"
-                                            />
-                                        </div>
-                                        <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
-
-                                            <Field
-                                                type="text"
-                                                name="age"
-                                                placeholder="Age"
-                                                className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
-                                                required
-                                            />
-                                        </div>
+                                <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
+                                    <div className="form-field-label sm:flex justify-between w-full hidden">
+                                        <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
+                                            Contact Number <span className='text-red-700'>*</span>
+                                        </span>
                                         <ErrorMessage
-                                            name="age"
+                                            name="contactNumber"
                                             component="span"
-                                            className="text-red-600 text-[12px] block sm:hidden"
+                                            className="text-red-600 text-[12px]"
                                         />
                                     </div>
+                                    <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
+
+                                        <Field
+                                            type="text"
+                                            name="contactNumber"
+                                            value={values.contactNumber}
+                                                onChange={handleChange}
+                                            placeholder="Contact Number"
+                                            className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
+                                            required
+                                        />
+                                    </div>
+                                    <ErrorMessage
+                                        name="contactNumber"
+                                        component="span"
+                                        className="text-red-600 text-[12px] block sm:hidden"
+                                    />
+                                </div>
 
                                     <div className='form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1'>
                                         <div className="form-field-container w-full">
@@ -208,95 +207,17 @@ const DoctorForm = ({ onClose }) => {
                                         </div>
                                     </div>
 
+
+
+
                                 </div>
 
 
 
 
-                                <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
-                                    <div className="form-field-label sm:flex justify-between w-full hidden">
-                                        <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                            Address
-                                        </span>
-                                        <ErrorMessage
-                                            name="address"
-                                            component="span"
-                                            className="text-red-600 text-[12px]"
-                                        />
-                                    </div>
-                                    <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
+                            
 
-                                        <Field
-                                            type="text"
-                                            name="address"
-                                            placeholder="Address"
-                                            className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
-                                            required
-                                        />
-                                    </div>
-                                    <ErrorMessage
-                                        name="address"
-                                        component="span"
-                                        className="text-red-600 text-[12px] block sm:hidden"
-                                    />
-                                </div>
-
-                                <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
-                                    <div className="form-field-label sm:flex justify-between w-full hidden">
-                                        <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                            Contact Number <span className='text-red-700'>*</span>
-                                        </span>
-                                        <ErrorMessage
-                                            name="contactNumber"
-                                            component="span"
-                                            className="text-red-600 text-[12px]"
-                                        />
-                                    </div>
-                                    <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
-
-                                        <Field
-                                            type="text"
-                                            name="contactNumber"
-                                            placeholder="Contact Number"
-                                            className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
-                                            required
-                                        />
-                                    </div>
-                                    <ErrorMessage
-                                        name="contactNumber"
-                                        component="span"
-                                        className="text-red-600 text-[12px] block sm:hidden"
-                                    />
-                                </div>
-
-
-
-                                {/* <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
-                                    <div className="form-field-label sm:flex justify-between w-full hidden">
-                                        <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                            Email <span className="text-[12px] text-[#565656] opacity-60 capitalize"><span className='text-red-700'>*</span></span>
-                                        </span>
-                                        <ErrorMessage
-                                            name="email"
-                                            component="span"
-                                            className="text-red-600 text-[12px]"
-                                        />
-                                    </div>
-                                    <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
-                                        <Field
-                                            type="text"
-                                            name="email"
-                                            placeholder="Email"
-                                            className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
-                                            required
-                                        />
-                                    </div>
-                                    <ErrorMessage
-                                        name="email"
-                                        component="span"
-                                        className="text-red-600 text-[12px] block sm:hidden"
-                                    />
-                                </div> */}
+                              
 
 
 
@@ -308,7 +229,9 @@ const DoctorForm = ({ onClose }) => {
 
 
 
-                                <button className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
+                                <button 
+                                type='submit'
+                                 className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
                                     Add Doctor
                                 </button>
 

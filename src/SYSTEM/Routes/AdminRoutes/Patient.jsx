@@ -80,7 +80,7 @@ function Patient() {
       <SideNav/>
 
       <div className='page-body-wrapper lg:w-5/6 bg-[#ffffff] h-screen mx-auto flex flex-col fixed right-0' id="style-7">
-          <div className='page-body-content p-10'>
+          <div className='page-body-content p-10 sm:ml-[80px] lg:ml-0'>
             <h3 className='text-[18pt]  text-[#002459] font-semibold'>Patients</h3>
 
 

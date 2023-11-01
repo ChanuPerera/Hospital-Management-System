@@ -66,10 +66,10 @@ const PatientForm = ({ onClose }) => {
                     </div>
                     <div className='flex flex-row justify-start mt-1'>
 
-                        <div className='flex flex-col'>
+                        {/* <div className='flex flex-col'>
                             <h3 className='text-[1.2rem] font-semibold text-[#565656]'>Reference no : 654996</h3>
                             <h3 className='text-[1rem] font-semibold text-[#565656]'>Appointment no : 3</h3>
-                        </div>
+                        </div> */}
                     </div>
 
 

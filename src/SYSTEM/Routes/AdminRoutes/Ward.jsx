@@ -13,20 +13,9 @@ function Ward() {
 
 
 
-  // const [isPopUpOpen, setPopUpOpen] = useState(false);
   const [isWardFormPopUpOpen, setWardFormPopUpOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null); // State to store the selected doctor data
 
-  // const openPopUp = (PatientData) => {
-  //   setSelectedPatient(PatientData); // Set the selected doctor data
-  //   setPopUpOpen(true);
-  // };
-
-
-
-  // const closePopUp = () => {
-  //   setPopUpOpen(false);
-  // };
 
 
   
@@ -75,14 +64,14 @@ function Ward() {
 
   return (
     <div className='w-full h-screen flex flex-row justify-between'>
-      <SideNav/>
+    <SideNav/>
 
-      <div className='page-body-wrapper lg:w-5/6 bg-[#ffffff] h-screen mx-auto flex flex-col fixed right-0' id="style-7">
-          <div className='page-body-content p-10'>
-            <h3 className='text-[18pt]  text-[#002459] font-semibold'>Ward List</h3>
+    <div className='page-body-wrapper lg:w-5/6 sm:w-full  bg-[#ffffff] h-screen mx-auto flex flex-col fixed right-0' id="style-7">
+        <div className='page-body-content p-10 sm:ml-[80px] lg:ml-0'>
+          <h3 className='text-[18pt]  text-[#002459] font-semibold'>Ward List</h3>
 
 
-            <div className='flex flex-row space-x-2 w-full mt-5'>
+          <div className='flex flex-row space-x-2 w-full mt-5 '>
                 <input type='text' placeholder='Search Doctor,Specialize,Room no..' className='w-1/3 p-2 outline-none border-[#565656] border-[1px] rounded-md border-opacity-30' />
                 <button className='text-[#ffffff] text-[14px] px-4 py-2 rounded-md bg-[#3D56DA]'>Search</button>
                 <button className='text-[#ffffff] text-[14px] px-4 py-2 rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA]'
@@ -183,14 +172,14 @@ function Ward() {
 
 
 
-          </div>
-      </div>
-
-
-
-
-
+        </div>
     </div>
+
+
+
+
+
+  </div>
   )
 }
 
