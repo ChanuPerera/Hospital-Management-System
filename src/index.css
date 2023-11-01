@@ -97,7 +97,6 @@ code {
 	width: 5px;
 	background-color: #Ffffff;
 }
-
 #style-7::-webkit-scrollbar-thumb
 {
 	border-radius: 10px;
@@ -108,3 +107,5 @@ code {
 									   color-stop(0.72, #6a82fc),
 									   color-stop(0.86, #3D56DA));
 }
+
+

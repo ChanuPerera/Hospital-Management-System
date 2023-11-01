@@ -4,9 +4,12 @@ import React from 'react';
 import Popup from 'reactjs-popup';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const PatientForm = ({ onClose }) => {
 
+    const navigate = useNavigate();
 
     const AppointmentSchema = Yup.object().shape({
         firstName: Yup.string()
@@ -23,20 +26,27 @@ const PatientForm = ({ onClose }) => {
             .min(2, 'Too Short!')
             .required('Required'),
         age: Yup.string()
-            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
             .required('Required'),
         contactNumber: Yup.string()
             .min(10, 'Invalid Number')
             .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
-            .required('Required'),
-        email: Yup.string().email('Invalid email')
             .required('Required'),
         gender: Yup.string().required('Gender is required'),
     });
 
 
 
-  
+
+    const handleAddNewPatient = async (values) => {
+        try {
+            console.log('Form Data:', values);
+            const response = await axios.post('http://192.168.8.195:3001/addNewPatient', values);
+            console.log('Response:', response.data);
+            onClose();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     return (
         <Popup
@@ -54,11 +64,6 @@ const PatientForm = ({ onClose }) => {
                         </div>
                     </div>
                     <div className='flex flex-row justify-start mt-1'>
-                        {/* <div className='flex flex-col'>
-                            <h3 className='text-[#565656]'> <span className='text-[#627BFE] font-semibold'>Dr.{doctorData.name} </span></h3>
-                            <p>Specialize: {doctorData.specialize}</p>
-                            <p>Time: {doctorData.datetime}</p>
-                        </div> */}
 
                         <div className='flex flex-col'>
                             <h3 className='text-[1.2rem] font-semibold text-[#565656]'>Reference no : 654996</h3>
@@ -71,22 +76,19 @@ const PatientForm = ({ onClose }) => {
                     <h3 className='text-[#627BFE] text-[16px] mt-3 text-center'>Patient Details</h3>
 
                     <Formik
-                        initialValues={{
-                            firstName: "",
-                            lastName: "",
-                            age: "",
-                            contactNumber: "",
-                            email: "",
-                            gender: '',
-                            address:"",
-
-                        }}
-                        validationSchema={AppointmentSchema}
-                        onSubmit={(values) => {
-                            console.log(values);
-                        }}
-                    >
-                        {({ errors, touched }) => (
+            initialValues={{
+              firstName: '',
+              lastName: '',
+              age: '',
+              contactNumber: '',
+              gender: '',
+              address: '',
+            }}
+            validationSchema={AppointmentSchema}
+            onSubmit={handleAddNewPatient}
+       
+          >
+                        {({ errors, touched, handleChange, values }) => (
                             <Form className="flex flex-col mb-[24px] w-full ">
 
 
@@ -108,6 +110,8 @@ const PatientForm = ({ onClose }) => {
 
                                             <Field
                                                 type="text"
+                                                value={values.firstName}
+                                                onChange={handleChange}
                                                 name="firstName"
                                                 placeholder="First Name"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
@@ -138,6 +142,8 @@ const PatientForm = ({ onClose }) => {
                                             <Field
                                                 type="text"
                                                 name="lastName"
+                                                value={values.lastName}
+                                                onChange={handleChange}
                                                 placeholder="Last Name"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
@@ -173,6 +179,9 @@ const PatientForm = ({ onClose }) => {
                                             <Field
                                                 type="text"
                                                 name="age"
+                                                value={values.age}
+                                                onChange={handleChange}
+                                               
                                                 placeholder="Age"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
@@ -194,13 +203,13 @@ const PatientForm = ({ onClose }) => {
                                             <div className="form-field-input-container flex flex-row space-x-5">
                                                 <div>
                                                     <label>
-                                                        <Field type="radio" name="gender" value="male" className="mr-3"/>
+                                                        <Field type="radio" name="gender" value="male" className="mr-3" />
                                                         Male
                                                     </label>
                                                 </div>
                                                 <div>
                                                     <label>
-                                                        <Field type="radio" name="gender" value="female" className="mr-3"/>
+                                                        <Field type="radio" name="gender" value="female" className="mr-3" />
                                                         Female
                                                     </label>
                                                 </div>
@@ -209,8 +218,6 @@ const PatientForm = ({ onClose }) => {
                                     </div>
 
                                 </div>
-
-
 
 
                                 <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
@@ -229,6 +236,8 @@ const PatientForm = ({ onClose }) => {
                                         <Field
                                             type="text"
                                             name="address"
+                                            value={values.address}
+                                            onChange={handleChange}
                                             placeholder="Address"
                                             className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                             required
@@ -257,6 +266,8 @@ const PatientForm = ({ onClose }) => {
                                         <Field
                                             type="text"
                                             name="contactNumber"
+                                            value={values.contactNumber}
+                                            onChange={handleChange}
                                             placeholder="Contact Number"
                                             className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                             required
@@ -269,58 +280,15 @@ const PatientForm = ({ onClose }) => {
                                     />
                                 </div>
 
-
-
-                                {/* <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
-                                    <div className="form-field-label sm:flex justify-between w-full hidden">
-                                        <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                            Email <span className="text-[12px] text-[#565656] opacity-60 capitalize"><span className='text-red-700'>*</span></span>
-                                        </span>
-                                        <ErrorMessage
-                                            name="email"
-                                            component="span"
-                                            className="text-red-600 text-[12px]"
-                                        />
-                                    </div>
-                                    <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
-                                        <Field
-                                            type="text"
-                                            name="email"
-                                            placeholder="Email"
-                                            className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
-                                            required
-                                        />
-                                    </div>
-                                    <ErrorMessage
-                                        name="email"
-                                        component="span"
-                                        className="text-red-600 text-[12px] block sm:hidden"
-                                    />
-                                </div> */}
-
-
-
-
-
-
-
-
-
-
-
-                                <button className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
+                                <button 
+                                type='submit'
+                               
+                                className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
                                     Add Patient
                                 </button>
-
-
-
-
                             </Form>
                         )}
                     </Formik>
-
-
-
                 </div>
 
             </div>
