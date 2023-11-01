@@ -6,6 +6,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import config from '../../config';
 
 const PatientForm = ({ onClose }) => {
 
@@ -40,7 +41,7 @@ const PatientForm = ({ onClose }) => {
     const handleAddNewPatient = async (values) => {
         try {
             console.log('Form Data:', values);
-            const response = await axios.post('http://192.168.8.195:3001/addNewPatient', values);
+            const response = await axios.post(`${config.baseUrl}/addNewPatient`, values);
             console.log('Response:', response.data);
             onClose();
         } catch (error) {
