@@ -38,9 +38,29 @@ const PatientForm = ({ onClose }) => {
 
 
 
+    async function generateUniqueReferenceNumber() {
+        try {
+            const response = await axios.get(`${config.baseUrl}/patients/count`);
+            const patientCount = response.data.count; // Extract the count from the response
+    
+            const newIndex = patientCount + 1;
+    
+            const referenceNo = `23PR${newIndex}`;
+    
+            return referenceNo;
+        } catch (error) {
+            console.error('Error generating reference number:', error);
+            throw error;
+        }
+    }
+    
+
     const handleAddNewPatient = async (values) => {
         try {
+            const referenceNo = await generateUniqueReferenceNumber();
+            values.referenceNo = referenceNo; 
             console.log('Form Data:', values);
+    
             const response = await axios.post(`${config.baseUrl}/addNewPatient`, values);
             console.log('Response:', response.data);
             onClose();
@@ -48,6 +68,9 @@ const PatientForm = ({ onClose }) => {
             console.error('Error:', error);
         }
     };
+
+
+
 
     return (
         <Popup
@@ -84,6 +107,7 @@ const PatientForm = ({ onClose }) => {
               contactNumber: '',
               gender: '',
               address: '',
+             
             }}
             validationSchema={AppointmentSchema}
             onSubmit={handleAddNewPatient}

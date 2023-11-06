@@ -1,10 +1,11 @@
-import React,{useState} from 'react'
-import SideNav from '../../Components/SideNav'
+import React,{useState, useEffect} from 'react'
+import SideNav from '../Components/SideNav';
 import { Search, Menu, Logout, ArrowForwardIos, NotificationsActive, Add } from "@mui/icons-material";
-import PatientEdit from '../../Components/PatientEdit';
-import PatientForm from '../../Components/PatientForm';
-import AppointmentForm from '../../Components/AppointmentForm';
-
+import PatientEdit from '../Components/PatientEdit';
+import PatientForm from '../Components/PatientForm';
+import AppointmentForm from '../Components/AppointmentForm';
+import axios from 'axios';
+import config from '../../config';
 
 
 
@@ -61,6 +62,35 @@ function Appointment() {
     },
   ];
 
+
+
+
+
+
+
+
+      // const [doctorNames, setDoctorNames] = useState([]);;
+
+      const [appointments, setAppointments] = useState([]);
+
+      const fetchAppointment = async () => {
+        try {
+          
+          const response = await axios.get(`${config.baseUrl}/appointments`);
+          console.log('Response from the server:', response.data);
+          setAppointments(response.data);
+
+        } catch (error) {
+          console.error('Error fetching Appointment data:', error);
+          console.error('Error response data:', error.response.data);
+        }
+      }
+
+      useEffect(()=>{
+        fetchAppointment();
+        },[])
+
+
   return (
     <div className="w-full h-screen flex flex-row justify-between">
       <SideNav />
@@ -104,38 +134,35 @@ function Appointment() {
                 #
               </th>
               <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
+                Reference No
+              </th>
+              <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
                 Name
               </th>
               <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
                 Age
               </th>
               <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                Address
+                NIC
               </th>
               <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
                 Contact
               </th>
               <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                Email
+                Doctor
+              </th>
+              <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
+                Date
               </th>
               <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
                 Appointment No
               </th>
-              <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                Payment
-              </th>
-              {/* <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 ">
-                Action
-              </th> */}
+              
 
-              {AppointmentData.map((appointment, index) => {
-                let textColor;
-                let visibility;
-                if (appointment.payment === "Completed") {
-                  textColor = "#2CA74F";
-                } else {
-                  textColor = "#A72C2C";
-                }
+              {appointments.map((appointment, index) => {
+                
+
+                let fullname = appointment.firstName + ` ` + appointment.lastName;
 
                 return (
                   <tr className="py-2 w-full" key={index}>
@@ -143,44 +170,39 @@ function Appointment() {
                       {index + 1}
                     </td>
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                      {appointment.name}
+                      {appointment.referenceNo}
                     </td>
 
+                    <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
+                      {fullname}
+                    </td>
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
                       {appointment.age}
                     </td>
 
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                      {appointment.address}
+                      {appointment.nic}
                     </td>
 
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                      {appointment.contact}
+                      {appointment.contactNumber}
                     </td>
 
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                      {appointment.email}
+                      {appointment.doctor}
                     </td>
 
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                      {appointment.appointmentNo}
+                      {appointment.date}
                     </td>
 
                     <td
                       className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20"
-                      style={{ color: textColor }}
+                     
                     >
-                      {appointment.payment}
+                      {appointment.appointmentNo}
                     </td>
-                    {/* 
-                    <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20 text-center">
-                      <button
-                        className="px-4 py-2 rounded-md bg-[#627BFE] text-white text-[12px] mx-auto "
-                        onClick={() => openPopUp(appointment)}
-                      >
-                        Edit
-                      </button>
-                    </td> */}
+                  
                   </tr>
                 );
               })}

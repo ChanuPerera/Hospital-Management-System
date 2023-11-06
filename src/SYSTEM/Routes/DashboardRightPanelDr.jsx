@@ -1,7 +1,7 @@
 import React from 'react'
 
-import user from "../../Assets/Images/user.png";
-import Calendar from './../../Components/Calendar';
+import user from "../Assets/Images/user.png";
+import Calendar from '../Components/Calendar';
 
 function DashboardRightPanelDr() {
     return (

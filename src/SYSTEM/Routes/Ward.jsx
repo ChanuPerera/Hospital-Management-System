@@ -1,8 +1,8 @@
 import React,{useState} from 'react'
-import SideNav from '../../Components/SideNav'
+import SideNav from '../Components/SideNav';
 import { Search, Menu, Logout, ArrowForwardIos, NotificationsActive, Add } from "@mui/icons-material";
-import PatientEdit from '../../Components/PatientEdit';
-import WardForm from '../../Components/WardForm';
+import PatientEdit from '../Components/PatientEdit';
+import WardForm from '../Components/WardForm';
 
 
 

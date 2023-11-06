@@ -1,5 +1,5 @@
 import React from 'react'
-import sideNavDoctor from '../../Components/sideNavDoctor';
+import sideNavDoctor from '../Components/sideNavDoctor';
 
 import DashboardRightPanelDr from './DashboardRightPanelDr';
 import { Calendar, Menu, Logout, CalendarMonth, Person2, Person3, LocationOn } from "@mui/icons-material";
