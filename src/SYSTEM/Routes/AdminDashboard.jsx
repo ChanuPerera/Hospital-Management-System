@@ -74,7 +74,65 @@ function AdminDashboard() {
   console.log('Doctors state:', doctors);
 
 
+  const [appointmentCount, setAppointmentCount] = useState(0); // Initialize the count
 
+  useEffect(() => {
+    const fetchAppointmentCount = async () => {
+      try {
+        const response = await axios.get(`${config.baseUrl}/appointments/count`);
+        const count = response.data.count;
+        setAppointmentCount(count); 
+      } catch (error) {
+        console.error('Error getting appointment Count:', error);
+        throw error;
+      }
+    };
+
+    fetchAppointmentCount(); 
+  }, []);
+
+
+
+  const [doctorCount, setDoctorCount] = useState(0); // Initialize the count
+
+  useEffect(() => {
+    const fetchDoctorCount = async () => {
+      try {
+        const response = await axios.get(`${config.baseUrl}/doctors/count`);
+        const count = response.data.count;
+        setDoctorCount(count); 
+      } catch (error) {
+        console.error('Error getting appointment Count:', error);
+        throw error;
+      }
+    };
+
+    fetchDoctorCount(); 
+  }, []);
+
+
+
+
+  const [appointments, setAppointments] = useState([]);
+
+      const fetchAppointment = async () => {
+        try {
+          
+          const response = await axios.get(`${config.baseUrl}/appointments`);
+          console.log('Response from the server:', response.data);
+          setAppointments(response.data);
+
+        } catch (error) {
+          console.error('Error fetching Appointment data:', error);
+          console.error('Error response data:', error.response.data);
+        }
+      }
+
+      useEffect(()=>{
+        fetchAppointment();
+        },[])
+
+        
 
   return (
     <div className='w-full h-screen flex flex-row justify-between'>
@@ -146,7 +204,7 @@ function AdminDashboard() {
                     <img src={AppointmentScheduling} alt='' className='w-full h-full object-cover' />
                   </div>
                   <div className='flex flex-col'>
-                    <h4 className='text-[18pt] text-[#002459]'>230</h4>
+                    <h4 className='text-[18pt] text-[#002459]'>{appointmentCount}</h4>
                     <span className='text-[#565656] text-[14px]'>Appointments</span>
                   </div>
 
@@ -158,7 +216,7 @@ function AdminDashboard() {
                     <img src={MedicalDoctor} alt='' className='w-full h-full object-cover' />
                   </div>
                   <div className='flex flex-col'>
-                    <h4 className='text-[18pt] text-[#002459]'>45</h4>
+                    <h4 className='text-[18pt] text-[#002459]'>{doctorCount}</h4>
                     <span className='text-[#565656] text-[14px]'>Available Doctors</span>
                   </div>
 
@@ -210,12 +268,12 @@ function AdminDashboard() {
 
             {doctors.map((doctor, index) => (
               <div className='flex flex-col w-full justify-between pr-5' key={index}>
-                {index % 2 === 1 && (
+                {index % 2 === 0 && (
                   <div className='w-full mt-5 '>
                     <div className='flex flex-row border-[#565656] border-[1px] border-opacity-20 rounded-lg p-5 relative'>
                       <div className='flex flex-col space-y-1'>
                         <span className='text-[#565656]'>{doctor.time}</span>
-                        <span className='text-[#1a1a1a] font-semibold'>{doctor.name}</span>
+                        <span className='text-[#1a1a1a] font-semibold'>{doctor.fullname}</span>
                         <span className='text-[#a7a7a7]'>{doctor.specialize}</span>
                       </div>
                       <div className='text-[12px] text-white font-semibold justify-center items-center absolute top-2 right-2 rounded-s-full px-2 py-1 bg-[#002459]'>
@@ -232,12 +290,12 @@ function AdminDashboard() {
           <div className='flex flex-col w-1/2 '>
             {doctors.map((doctor, index) => (
               <div className='flex flex-col w-full justify-between ' key={index}>
-                {index % 2 === 0 && (
+                {index % 2 === 1 && (
                   <div className='w-full mt-5'>
                     <div className='flex flex-row border-[#565656] border-[1px] border-opacity-20 rounded-lg p-5 relative'>
                       <div className='flex flex-col space-y-1'>
                         <span className='text-[#565656]'>{doctor.time}</span>
-                        <span className='text-[#1a1a1a] font-semibold'>{doctor.name}</span>
+                        <span className='text-[#1a1a1a] font-semibold'>{doctor.fullname}</span>
                         <span className='text-[#a7a7a7]'>{doctor.specialize}</span>
                       </div>
                       <div className='text-[12px] text-white font-semibold justify-center items-center absolute top-2 right-2 rounded-s-full px-2 py-1 bg-[#002459]'>

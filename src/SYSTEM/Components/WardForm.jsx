@@ -4,6 +4,8 @@ import React from 'react';
 import Popup from 'reactjs-popup';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import axios from 'axios';
+import config from '../../config';
 
 const WardForm = ({ onClose }) => {
 
@@ -16,16 +18,29 @@ const WardForm = ({ onClose }) => {
             .max(50, 'Too Short!')
             .required('Required'),
         wardNo: Yup.string()
-            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
+           
             .required('Required'),
         noOfBeds: Yup.string()
-            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
+         
             .required('Required'),
         gender: Yup.string().required('Gender is required'),
     });
 
 
 
+
+    const handleNewWard = async (values) => {
+        try {
+        
+                console.log('Form Data:', values);
+                const response = await axios.post(`${config.baseUrl}/addNewWard`, values);
+                console.log('Response:', response.data);
+                onClose();
+            
+        } catch (error) {
+            console.log('Error : ', error);
+        }
+    }
   
 
     return (
@@ -56,11 +71,9 @@ const WardForm = ({ onClose }) => {
 
                         }}
                         validationSchema={WardSchema}
-                        onSubmit={(values) => {
-                            console.log(values);
-                        }}
+                        onSubmit={handleNewWard}
                     >
-                        {({ errors, touched }) => (
+                        {({ errors, touched, values, handleChange }) => (
                             <Form className="flex flex-col mb-[24px] w-full ">
 
 
@@ -83,6 +96,8 @@ const WardForm = ({ onClose }) => {
                                             <Field
                                                 type="text"
                                                 name="buildingNo"
+                                                value={values.buildingNo}
+                                                onChange={handleChange}
                                                 placeholder="Building No"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
@@ -112,6 +127,8 @@ const WardForm = ({ onClose }) => {
                                             <Field
                                                 type="text"
                                                 name="section"
+                                                value={values.section}
+                                                onChange={handleChange}
                                                 placeholder="Section"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
@@ -147,6 +164,8 @@ const WardForm = ({ onClose }) => {
                                             <Field
                                                 type="text"
                                                 name="wardNo"
+                                                value={values.wardNo}
+                                                onChange={handleChange}
                                                 placeholder="Ward No"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
@@ -203,6 +222,8 @@ const WardForm = ({ onClose }) => {
                                         <Field
                                             type="text"
                                             name="noOfBeds"
+                                            value={values.noOfBeds}
+                                                onChange={handleChange}
                                             placeholder="No Of Beds"
                                             className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                             required
@@ -282,8 +303,10 @@ const WardForm = ({ onClose }) => {
 
 
 
-                                <button className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
-                                    Add Ward
+                                <button 
+                                type='submit'
+                                className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
+                                    Assign New Ward
                                 </button>
 
 

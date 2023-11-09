@@ -57,11 +57,19 @@ const PatientForm = ({ onClose }) => {
 
     const handleAddNewPatient = async (values) => {
         try {
+
+            const fullName = `${values.firstName} ${values.lastName}`;
+            // Include selectedDay and selectedTime in the form data
+                const formData = {
+                ...values, 
+                fullName:fullName,
+            };
+
             const referenceNo = await generateUniqueReferenceNumber();
             values.referenceNo = referenceNo; 
-            console.log('Form Data:', values);
+            console.log('Form Data:', formData);
     
-            const response = await axios.post(`${config.baseUrl}/addNewPatient`, values);
+            const response = await axios.post(`${config.baseUrl}/addNewPatient`, formData);
             console.log('Response:', response.data);
             onClose();
         } catch (error) {

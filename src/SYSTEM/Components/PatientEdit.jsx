@@ -1,41 +1,76 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState } from 'react';
 import Popup from 'reactjs-popup';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 
-const PatientEdit = ({ PatientData, onClose }) => {
+const PatientEdit = ({ PatientData, onClose, onUpdate }) => {
 
 
-    const AppointmentSchema = Yup.object().shape({
-        firstName: Yup.string()
-            .min(2, 'Too Short!')
-            .max(50, 'Too Long!')
-            .matches(/^[A-Za-z]+$/, "Must be only Letters")
-            .required('Required'),
-        lastName: Yup.string()
-            .min(2, 'Too Short!')
-            .max(50, 'Too Long!')
-            .matches(/^[A-Za-z]+$/, "Must be only Letters")
-            .required('Required'),
-        age: Yup.string()
-            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
-            .required('Required'),
-        contactNumber: Yup.string()
-            .min(10, 'Invalid Number')
-            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
-            .required('Required'),
-        email: Yup.string().email('Invalid email')
-            .required('Required'),
-        gender: Yup.string().required('Gender is required'),
+    const [updatedFirstName, setUpdatedFirstName] = useState(PatientData.firstName);
+    const [updatedLastName, setUpdatedLastName] = useState(PatientData.lastName);
+    const [updatedAddress, setUpdatedAddress] = useState(PatientData.address);
+    const [updatedEmail, setUpdatedEmail] = useState(PatientData.email);
+    const [updatedContactNumber, setUpdatedContactNumber] = useState(PatientData.contactNumber);
+  
+    const initialValues = {
+      firstName: updatedFirstName,
+      lastName: updatedLastName,
+      contactNumber: updatedContactNumber,
+      address: updatedAddress,
+      email: updatedEmail,
+    };
+  
+    const validationSchema = Yup.object().shape({
+      initials: Yup.string()
+        .matches(/^[A-Za-z .]+$/, 'Must be only letters')
+        .required('Required'),
+      surname: Yup.string()
+        .matches(/^[A-Za-z .]+$/, 'Must be only letters')
+        .required('Required'),
+      contactNumber: Yup.string()
+        .min(10, 'Invalid Number')
+        .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, 'Must be only digits')
+        .required('Required'),
     });
 
 
+    const handleFirstNameChange = (e) => {
+        setUpdatedFirstName(e.target.value);
+      };
+      const handleLastNameChange = (e) => {
+        setUpdatedLastName(e.target.value);
+      };
+      const handleEmailChange = (e) => {
+        setUpdatedAddress(e.target.value);
+      };
 
-    if (!PatientData) {
-        return null; // Return null if no doctorData is provided
-    }
+      const handleAddressChange = (e) => {
+        setUpdatedEmail(e.target.value);
+      };
+
+
+
+    const handleContactNumberChange = (e) => {
+        setUpdatedContactNumber(e.target.value);
+      };
+    
+      const handleFormSubmit = (values) => {
+        const updatedFullname = `${updatedFirstName} ${updatedLastName}`;
+        const updatedPatientData = {
+          ...PatientData,
+          firstName: updatedFirstName,
+          lastName: updatedLastName,
+          fullName: updatedFullname,
+          contactNumber: updatedContactNumber,
+        };
+        onUpdate(PatientData._id, updatedPatientData);
+        onClose();
+      };
+
+      
+
 
     return (
         <Popup
@@ -70,19 +105,9 @@ const PatientEdit = ({ PatientData, onClose }) => {
                     <h3 className='text-[#627BFE] text-[16px] mt-3 text-center'>Patient Details</h3>
 
                     <Formik
-                        initialValues={{
-                            firstName: "",
-                            lastName: "",
-                            age: "",
-                            contactNumber: "",
-                            email: "",
-                            gender: '',
-
-                        }}
-                        validationSchema={AppointmentSchema}
-                        onSubmit={(values) => {
-                            console.log(values);
-                        }}
+                        initialValues={initialValues}
+                        validationSchema={validationSchema}
+                        onSubmit={handleFormSubmit}
                     >
                         {({ errors, touched }) => (
                             <Form className="flex flex-col mb-[24px] w-full ">

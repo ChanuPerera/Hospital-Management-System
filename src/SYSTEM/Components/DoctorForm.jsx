@@ -1,5 +1,6 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from 'react';
 import Popup from 'reactjs-popup';
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -12,8 +13,11 @@ const DoctorForm = ({ onClose }) => {
 
 
     const AppointmentSchema = Yup.object().shape({
-        name: Yup.string()
+        surname: Yup.string()
             .min(2, 'Too Short!')
+            .matches(/^[A-Za-z .]+$/, "Must be only Letters")
+            .required('Required'),
+        initials: Yup.string()
             .matches(/^[A-Za-z .]+$/, "Must be only Letters")
             .required('Required'),
         specialize: Yup.string()
@@ -25,6 +29,13 @@ const DoctorForm = ({ onClose }) => {
             .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
             .required('Required'),
         gender: Yup.string().required('Gender is required'),
+        userID: Yup.string()
+            .min(2, 'Too Short!')
+            .matches(/^[A-Za-z]+$/, "Must be only Letters")
+            .required('Required'),
+        password: Yup.string()
+            .required('Required'),
+
 
     });
 
@@ -33,17 +44,27 @@ const DoctorForm = ({ onClose }) => {
 
     const handleAddNewDoctor = async (values) => {
         try {
+
+            const fullname = `${values.initials} ${values.surname}`;
+            const role = "doctor";
             // Include selectedDay and selectedTime in the form data
             const formData = {
                 ...values,
                 availabledate: selectedDay, // Assign selectedDay to date
                 time: selectedTime, // Assign selectedTime to time
                 roomNo: selectedRoomNo,
+                fullname: fullname,
+                role: role,
             };
 
             console.log('Form Data:', formData);
             const response = await axios.post(`${config.baseUrl}/addNewDoctor`, formData);
             console.log('Response:', response.data);
+
+            const { userID, password } = formData;
+            const roleResponse = await axios.post(`${config.baseUrl}/addNewRole`, { userID, password, role });
+            console.log('Role Response:', roleResponse.data);
+
             onClose();
         } catch (error) {
             console.error('Error:', error);
@@ -65,9 +86,15 @@ const DoctorForm = ({ onClose }) => {
 
     const handleTimeChange = (event) => {
         setSelectedTime(event.target.value);
-       
-      };
-      
+
+    };
+
+    const [passwordVisible, setPasswordVisible] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    };
+
 
     return (
         <Popup
@@ -94,12 +121,17 @@ const DoctorForm = ({ onClose }) => {
 
                     <Formik
                         initialValues={{
-                            name: "",
+                            surname: "",
                             specialize: "",
                             contactNumber: "",
                             gender: '',
                             availabledate: "",
                             roomNo: '',
+                            initials: '',
+                            fullname: '',
+                            userID: '',
+                            password: '',
+
 
                         }}
                         validationSchema={AppointmentSchema}
@@ -112,14 +144,48 @@ const DoctorForm = ({ onClose }) => {
 
 
                                 <div className='w-full flex flex-row justify-between space-x-3'>
+
+
                                     <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
                                         <div className="form-field-label sm:flex justify-between w-full hidden">
                                             <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                                Name <span className='text-red-700'>*</span>
+                                                Initials<span className='text-red-700'>*</span>
                                             </span>
                                             <ErrorMessage
-                                                name="name"
-                                                value={values.name}
+                                                name="initials"
+                                                component="span"
+                                                className="text-red-600 text-[12px]"
+                                            />
+                                        </div>
+                                        <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
+
+                                            <Field
+                                                type="text"
+                                                name="initials"
+                                                value={values.initials}
+                                                onChange={handleChange}
+                                                placeholder="Initials"
+                                                className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
+                                                required
+                                            />
+                                        </div>
+                                        <ErrorMessage
+                                            name="initials"
+                                            component="span"
+                                            className="text-red-600 text-[12px] block sm:hidden"
+                                        />
+                                    </div>
+
+
+
+                                    <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
+                                        <div className="form-field-label sm:flex justify-between w-full hidden">
+                                            <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
+                                                Surname <span className='text-red-700'>*</span>
+                                            </span>
+                                            <ErrorMessage
+                                                name="surname"
+                                                value={values.surname}
                                                 onChange={handleChange}
                                                 component="span"
                                                 className="text-red-600 text-[12px]"
@@ -129,53 +195,53 @@ const DoctorForm = ({ onClose }) => {
 
                                             <Field
                                                 type="text"
-                                                name="name"
-                                                placeholder="Name with Initials"
+                                                name="surname"
+                                                placeholder="Surname"
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
                                         </div>
                                         <ErrorMessage
-                                            name="name"
+                                            name="surname"
                                             component="span"
                                             className="text-red-600 text-[12px] block sm:hidden"
                                         />
                                     </div>
 
 
-                                    <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
-                                        <div className="form-field-label sm:flex justify-between w-full hidden">
-                                            <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
-                                                Specialize<span className='text-red-700'>*</span>
-                                            </span>
-                                            <ErrorMessage
-                                                name="specialize"
-                                                component="span"
-                                                className="text-red-600 text-[12px]"
-                                            />
-                                        </div>
-                                        <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
 
-                                            <Field
-                                                type="text"
-                                                name="specialize"
-                                                value={values.specialize}
-                                                onChange={handleChange}
-                                                placeholder="Specialize in"
-                                                className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
-                                                required
-                                            />
-                                        </div>
-                                        <ErrorMessage
-                                            name="specialize"
-                                            component="span"
-                                            className="text-red-600 text-[12px] block sm:hidden"
-                                        />
-                                    </div>
                                 </div>
 
 
+                                <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-full space-y-1">
+                                    <div className="form-field-label sm:flex justify-between w-full hidden">
+                                        <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
+                                            Specialize<span className='text-red-700'>*</span>
+                                        </span>
+                                        <ErrorMessage
+                                            name="specialize"
+                                            component="span"
+                                            className="text-red-600 text-[12px]"
+                                        />
+                                    </div>
+                                    <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
 
+                                        <Field
+                                            type="text"
+                                            name="specialize"
+                                            value={values.specialize}
+                                            onChange={handleChange}
+                                            placeholder="Specialize in"
+                                            className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
+                                            required
+                                        />
+                                    </div>
+                                    <ErrorMessage
+                                        name="specialize"
+                                        component="span"
+                                        className="text-red-600 text-[12px] block sm:hidden"
+                                    />
+                                </div>
 
 
 
@@ -293,13 +359,218 @@ const DoctorForm = ({ onClose }) => {
                                                 <option value="Sunday">Sunday</option>
                                             </select>
                                             <Field
-                                               type="time"
+                                                type="time"
                                                 value={selectedTime}
                                                 onChange={handleTimeChange}
                                             />
                                         </div>
                                     </div>
                                 </div>
+
+
+
+                                {/* <div className='w-full flex flex-row justify-between space-x-3'>
+
+
+                                    <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-2">
+                                        <div className="form-field-label sm:flex justify-between w-full hidden">
+                                            <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
+                                                UserID
+                                            </span>
+                                            <ErrorMessage
+                                                name="userID"
+                                                component="span"
+                                                className="text-red-600 text-[12px]"
+                                            />
+                                        </div>
+                                        <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
+                                            <div className="form-field-input-icobox bg-[#627BFE] h-[38px] w-[38px] rounded-bl-[6px] rounded-tl-[6px] justify-center items-center flex">
+                                                <span className="text-[16px] text-[#FFFFFF]">
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                </span>
+                                            </div>
+                                            <Field
+                                                type="text"
+                                                name="userID"
+                                                value={values.userID}
+                                                onChange={handleChange}
+                                                placeholder="UserID"
+                                                className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
+                                                required
+                                            />
+                                        </div>
+                                        <ErrorMessage
+                                            name="userID"
+                                            component="span"
+                                            className="text-red-600 text-[12px] block sm:hidden"
+                                        />
+                                    </div>
+
+                                    <div className="form-field-container flex flex-col sm:mt-5 mt-2 space-y-2 w-1/2">
+                                        <div className="form-field-label flex justify-between w-full">
+                                            <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">Password</span>
+                                            <ErrorMessage
+                                                name="password"
+                                                component="span"
+                                                className="text-red-600 text-[12px]"
+                                            />
+                                        </div>
+                                        <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
+                                            <div className="form-field-input-icobox bg-[#627BFE] h-[38px] w-[38px] rounded-bl-[6px] rounded-tl-[6px] justify-center items-center flex">
+                                                <span className="text-[16px] text-[#ffffff]">
+                                                    <FontAwesomeIcon icon={faLock} />
+                                                </span>
+                                            </div>
+                                            <Field
+                                                className="form-field-input w-[90%] h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px]"
+                                                type={passwordVisible ? 'text' : 'password'}
+                                                name="password"
+                                                value={values.password}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                            <div className="h-[38px] w-[38px] rounded-bl-[6px] rounded-tl-[6px] justify-center items-center flex">
+                                                {passwordVisible ? (
+                                                    <span
+                                                        className="text-[16px] text-[#627BFE] cursor-pointer"
+                                                        onClick={togglePasswordVisibility}
+                                                    >
+                                                        <FontAwesomeIcon icon={faEye} />
+                                                    </span>
+                                                ) : (
+                                                    <span
+                                                        className="text-[16px] text-[#627BFE] cursor-pointer"
+                                                        onClick={togglePasswordVisibility}
+                                                    >
+                                                        <FontAwesomeIcon icon={faEyeSlash} />
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <ErrorMessage
+                                            name="password"
+                                            component="span"
+                                            className="text-red-600 text-[12px] block sm:hidden"
+                                        />
+                                    </div>
+
+
+                                </div> */}
+
+
+
+                                <div className='w-full flex flex-row justify-between space-x-3'>
+
+
+                                    <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
+                                        <div className="form-field-label sm:flex justify-between w-full hidden">
+                                            <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
+                                                UserID<span className='text-red-700'>*</span>
+                                            </span>
+                                            <ErrorMessage
+                                                name="userID"
+                                                component="span"
+                                                className="text-red-600 text-[12px]"
+                                            />
+                                        </div>
+                                        <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
+
+                                            <Field
+                                                type="text"
+                                                name="userID"
+                                                value={values.userID}
+                                                onChange={handleChange}
+                                                placeholder="UserID"
+                                                className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
+                                                required
+                                            />
+                                        </div>
+                                        <ErrorMessage
+                                            name="userID"
+                                            component="span"
+                                            className="text-red-600 text-[12px] block sm:hidden"
+                                        />
+                                    </div>
+
+
+
+                                    {/* <div className="form-field-container flex flex-col sm:mt-5 mt-2 w-1/2 space-y-1">
+                                        <div className="form-field-label sm:flex justify-between w-full hidden">
+                                            <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
+                                                Password <span className='text-red-700'>*</span>
+                                            </span>
+                                            <ErrorMessage
+                                                name="password"
+                                                value={values.password}
+                                                onChange={handleChange}
+                                                component="span"
+                                                className="text-red-600 text-[12px]"
+                                            />
+                                        </div>
+                                        <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
+
+                                            <Field
+                                                type="password"
+                                                name="password"
+                                                
+                                                className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
+                                                required
+                                            />
+                                        </div>
+                                        <ErrorMessage
+                                            name="password"
+                                            component="span"
+                                            className="text-red-600 text-[12px] block sm:hidden"
+                                        />
+                                    </div> */}
+
+                                    <div className="form-field-container flex flex-col sm:mt-5 mt-2 space-y-2 w-1/2">
+                                        <div className="form-field-label flex justify-between w-full">
+                                            <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">Password</span>
+                                            <ErrorMessage
+                                                name="password"
+                                                component="span"
+                                                className="text-red-600 text-[12px]"
+                                            />
+                                        </div>
+                                        <div className="form-field-input-container w-full rounded-[6px] h-[38px] bg-[#FFFFFF] border-[1px] border-[#565656] border-opacity-20 flex flex-row justify-center items-center">
+
+                                            <Field
+                                                className="form-field-input w-[90%] h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px]"
+                                                type={passwordVisible ? 'text' : 'password'}
+                                                name="password"
+                                                value={values.password}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                            <div className="h-[38px] w-[38px] rounded-bl-[6px] rounded-tl-[6px] justify-center items-center flex">
+                                                {passwordVisible ? (
+                                                    <span
+                                                        className="text-[16px] text-[#627BFE] cursor-pointer"
+                                                        onClick={togglePasswordVisibility}
+                                                    >
+                                                        <FontAwesomeIcon icon={faEye} />
+                                                    </span>
+                                                ) : (
+                                                    <span
+                                                        className="text-[16px] text-[#627BFE] cursor-pointer"
+                                                        onClick={togglePasswordVisibility}
+                                                    >
+                                                        <FontAwesomeIcon icon={faEyeSlash} />
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <ErrorMessage
+                                            name="password"
+                                            component="span"
+                                            className="text-red-600 text-[12px] block sm:hidden"
+                                        />
+                                    </div>
+
+                                </div>
+
+
 
 
                                 <button

@@ -15,6 +15,22 @@ function Patient() {
 
 
 
+  const handleUpdatePatient = async (patientId, updatedPatientData) => {
+    try {
+      const updatedFullname = `${updatedPatientData.firstName} ${updatedPatientData.lastName}`;
+      updatedPatientData.fullName = updatedFullname;
+      const response = await axios.put(`${config.baseUrl}/doctors/updateDoctor/${patientId}`, updatedPatientData);
+      console.log('Doctor updated:', response.data);
+      closePopUp();
+      fetchPatient();
+    } catch (error) {
+      console.error('Error updating doctor:', error);
+    }
+  };
+  
+
+
+
   const [isPopUpOpen, setPopUpOpen] = useState(false);
   const [isPatientFormPopUpOpen, setPatientFormPopUpOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null); // State to store the selected doctor data
@@ -77,8 +93,10 @@ function Patient() {
 
 
   const [patients, setPatients] = useState([]);
-  const fetchDoctors = async () => {
+  const fetchPatient = async () => {
     try {
+
+     
       const response = await axios.get(`${config.baseUrl}/patients`);
       console.log('Response from the server:', response.data);
       setPatients(response.data);
@@ -88,9 +106,9 @@ function Patient() {
     }
   };
 
-  // Call the async function to fetch doctors when the component mounts
+  // Call the async function to fetch Patient when the component mounts
   useEffect(() => {
-    fetchDoctors();
+    fetchPatient();
   }, []);
 
   console.log('Patient state:', patients);
@@ -171,7 +189,7 @@ function Patient() {
                 }
 
 
-                let fullname = patient.firstName + ` ` + patient.lastName;
+               
 
 
 
@@ -189,7 +207,7 @@ function Patient() {
                     </td>
 
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                      {fullname}
+                      {patient.fullName}
                     </td>
 
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
@@ -238,6 +256,7 @@ function Patient() {
             <PatientEdit
               PatientData={selectedPatient}
               onClose={closePopUp}
+              onUpdate={handleUpdatePatient}
             />
           )}
 

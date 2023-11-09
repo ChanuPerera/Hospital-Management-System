@@ -20,10 +20,10 @@ function Doctor() {
 
 
   const [isPopUpOpen, setPopUpOpen] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState(null); // State to store the selected doctor data
+  const [selectedDoctor, setSelectedDoctor] = useState(null); 
 
-  const openPopUp = (doctorData) => {
-    setSelectedDoctor(doctorData); // Set the selected doctor data
+  const openPopUp = (doctors) => {
+    setSelectedDoctor(doctors); 
     setPopUpOpen(true);
   };
 
@@ -44,38 +44,6 @@ function Doctor() {
 
 
 
-  const DoctorData = [
-    {
-      name: "G. Dinesh Karunarathne",
-      specialize: "Cancer Surgeon",
-      hospital: "City Hospital - Colombo",
-      contact: "0775887741",
-      datetime: "Mon -7.00 PM , Sat-8.30 AM",
-      roomno: "35",
-      status: "Arrived"
-    },
-    {
-      name: "L.D.K Opanayake",
-      specialize: "Anaesthetist",
-      hospital: "City Hospital - Colombo",
-      contact: "0775887741",
-      datetime: "Mon -7.00 PM , Sat-8.30 AM",
-      roomno: "11",
-      status: "Leave"
-    },
-    {
-      name: "Pushpika Senarathne",
-      specialize: "Clinical Physiologist",
-      hospital: "Lanka Hospital - Colombo",
-      contact: "0775887741",
-      datetime: "Mon -7.00 PM , Sat-8.30 AM",
-      roomno: "28",
-      status: "Arrived"
-    },
-  ]
-
-
-
   const [doctors, setDoctors] = useState([]);
 
   const fetchDoctors = async () => {
@@ -89,13 +57,28 @@ function Doctor() {
     }
   };
 
-  // Call the async function to fetch doctors when the component mounts
   useEffect(() => {
     fetchDoctors();
   }, []);
 
   console.log('Doctors state:', doctors);
 
+
+
+
+  const handleUpdateDoctor = async (doctorId, updatedDoctorData) => {
+    try {
+      const updatedFullname = `${updatedDoctorData.initials} ${updatedDoctorData.surname}`;
+      updatedDoctorData.fullname = updatedFullname;
+      const response = await axios.put(`${config.baseUrl}/doctors/updateDoctor/${doctorId}`, updatedDoctorData);
+      console.log('Doctor updated:', response.data);
+      closePopUp();
+      fetchDoctors();
+    } catch (error) {
+      console.error('Error updating doctor:', error);
+    }
+  };
+  
 
 
   return (
@@ -158,7 +141,7 @@ function Doctor() {
 
 
                 let dateNtime = doctor.availabledate + ` ` + doctor.time
-
+          
 
 
                 return (
@@ -169,7 +152,7 @@ function Doctor() {
                       {index + 1}
                     </td>
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                      {doctor.name}
+                      {doctor.fullname}
                     </td>
 
                     <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
@@ -216,6 +199,7 @@ function Doctor() {
             <DoctorEdit
               doctorData={selectedDoctor}
               onClose={closePopUp}
+              onUpdate={handleUpdateDoctor}
             />
           )}
 

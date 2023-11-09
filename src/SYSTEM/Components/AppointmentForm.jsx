@@ -72,7 +72,7 @@ const AppointmentForm = ({ onClose }) => {
     async function generateUniqueReferenceNumber() {
         try {
             const response = await axios.get(`${config.baseUrl}/appointments/count`);
-            const patientCount = response.data.count; // Extract the count from the response
+            const patientCount = response.data.count; 
 
             const newIndex = patientCount + 1;
 
@@ -90,7 +90,7 @@ const AppointmentForm = ({ onClose }) => {
     async function generateAppointmentNo() {
         try {
             const response = await axios.get(`${config.baseUrl}/appointments/count`);
-            const patientCount = response.data.count; // Extract the count from the response
+            const patientCount = response.data.count; 
 
             const newIndex = patientCount + 1;
 
@@ -105,28 +105,49 @@ const AppointmentForm = ({ onClose }) => {
 
 
 
+
     const handleAddNewAppointment = async (values) => {
         try {
-
-            const formattedDate = format(selectedDate, 'd MMMM yyyy');
-            values.date = formattedDate;
-
-
-            const referenceNo = await generateUniqueReferenceNumber();
-            const appointmentNo = await generateAppointmentNo();
-            values.referenceNo = referenceNo;
-            values.appointmentNo = appointmentNo;
-            console.log('Form Data:', values);
-
+          const formattedDate = format(selectedDate, 'd MMMM yyyy');
+          values.date = formattedDate;
+      
+          const referenceNo = await generateUniqueReferenceNumber();
+          const appointmentNo = await generateAppointmentNo();
+          values.referenceNo = referenceNo;
+          values.appointmentNo = appointmentNo;
+      
+          console.log('Form Data:', values);
+      
+          // Fetch the doctor's ObjectId based on the doctor's name
+          const doctorResponse = await axios.get(`${config.baseUrl}/doctors/byName/${values.doctor}`);
+          
+          if (doctorResponse.data && doctorResponse.data.doctorId) {
+            const doctorId = doctorResponse.data.doctorId;
+            console.log('Doctor ObjectId:', doctorId);
+      
+            // Create a new appointment
             const response = await axios.post(`${config.baseUrl}/addNewAppointment`, values);
-            console.log('Response:', response.data);
-            onClose();
+      
+            if (response.data.message === "Appointment Submitted successfully") {
+              // Update the doctor's appointmentNos array with the appointmentNo
+              await axios.put(`${config.baseUrl}/doctors/updateAppointments/${doctorId}`, {
+                appointmentId:appointmentNo, // Assuming the response contains the new appointment's ID
+              });
+      
+              console.log('Appointment added to doctor:', response.data);
+              onClose();
+            } else {
+              console.log('Appointment submission failed.');
+            }
+          } else {
+            console.log('Doctor not found.');
+          }
         } catch (error) {
-            console.error('Error:', error);
+          console.error('Error:', error);
         }
-    };
+      };
 
-
+      
 
 
     const [nextReferenceNo, setNextReferenceNo] = useState('');
@@ -229,7 +250,7 @@ const AppointmentForm = ({ onClose }) => {
                                                 onChange={handleChange}
                                                 name="firstName"
                                                 placeholder="First Name"
-                                                className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
+                                                className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input "
                                                 required
                                             />
                                         </div>
@@ -383,8 +404,8 @@ const AppointmentForm = ({ onClose }) => {
                                                 >
                                                     <option value="">Select a doctor</option>
                                                     {doctors.map((doctor) => (
-                                                        <option key={doctor._id} value={doctor.name}>
-                                                            {doctor.name}
+                                                        <option key={doctor._id} value={doctor.fullname}>
+                                                            {doctor.fullname}
                                                         </option>
                                                     ))}
                                                 </Field>

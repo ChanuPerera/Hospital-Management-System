@@ -72,57 +72,6 @@ const handleLogin = async (values) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-// const handleLogin = async (values) => {
-  
-
-//   try {
-//     const response = await axios.post(`${config.baseUrl}/login`, {
-//       userID: values.userID,
-//       password: values.password,
-//     });
-
-//     const userRole = response.data.role;
-
-//     if (userRole) {
-//       // User found, display the role
-//       console.log(`User Role: ${userRole}`);
-
-//       // Store user role in local storage or state
-//       localStorage.setItem('userRole', userRole);
-
-//       // Check the user's role and navigate accordingly
-//       if (userRole === 'admin') {
-//         // Navigate to the "AdminRoutes" when the user is an admin
-//         navigate('/AdminDashboard');
-//       } else if (userRole === 'doctor') {
-//         // Navigate to the "DoctorRoutes" when the user is a doctor
-//         navigate('/DoctorDashboard');
-//       }
-//     } else {
-//       // Handle login error
-//       console.error('Login error:', 'User not found');
-//       // Display an error message to the user
-//     }
-//   } catch (error) {
-//     // Handle other errors (e.g., network issues)
-//     console.error('Login error:', error);
-//     // Display an error message to the user
-//   }
-// };
-
-
   return (
 
     <div className="w-full flex flex-col justify-center items-center bg-white h-screen">

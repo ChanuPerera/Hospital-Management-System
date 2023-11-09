@@ -1,9 +1,58 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios';
+import config from '../../config';
 
 import user from "../Assets/Images/user.png";
 import Calendar from './Calendar';
 
 function DashboardRightPanel() {
+
+
+
+
+
+
+
+
+
+
+    const [appointments, setAppointments] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+
+
+    const fetchAppointments = async () => {
+        try {
+            const response = await axios.get(`${config.baseUrl}/appointments`);
+            setAppointments(response.data);
+        } catch (error) {
+            console.error('Error fetching Appointment data:', error);
+        }
+    }
+
+    const fetchDoctors = async () => {
+        try {
+            const response = await axios.get(`${config.baseUrl}/doctors`);
+            setDoctors(response.data);
+        } catch (error) {
+            console.error('Error fetching doctor data:', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchAppointments();
+        fetchDoctors();
+    }, []);
+
+
+
+    // Function to find the doctor and get room number
+    const getRoomNumber = (appointment) => {
+        const doctor = doctors.find((d) => d.fullname === appointment.doctor);
+        return doctor ? doctor.roomNo : 'Room not found';
+    }
+
+
+
     return (
         <div className='w-1/6 h-screen fixed right-0 border-collapse border-l-[1px] border-[#565656] border-opacity-10 lg:block hidden overflow-y-auto' id="style-7">
             <div className='right-nav-body p-5 flex flex-col space-y-5'>
@@ -27,58 +76,27 @@ function DashboardRightPanel() {
 
                 <h3 className='text-[18pt]  text-[#002459] font-semibold'>Recent Appointments</h3>
 
-                <div className='w-full flex flex-row border-[#565656] border-[1px] border-opacity-20 rounded-lg p-5 relative'>
-                    <div className='flex flex-col space-y-2'>
-                        <span className='text-[#565656]'>8.30 a.m</span>
-                        <span className='text-[#1a1a1a] font-semibold'>Pushpika Amarathunga</span>
-                        <span className='text-[#565656]'>Consultation with <span className='text-[#627BFE] font-semibold'>Dr. M.P De Silva</span> </span>
-                    </div>
+                {appointments.map((appointmentData, index) => (
 
-                    <div className='text-[12px] text-white font-semibold justify-center
+
+
+                    <div className='w-full flex flex-row border-[#565656] border-[1px] border-opacity-20 rounded-lg p-5 relative' key={index}>
+                        <div className='flex flex-col space-y-2'>
+                            <span className='text-[#565656]'>{appointmentData.time}</span>
+                            <span className='text-[#1a1a1a] font-semibold'>{appointmentData.firstName} {appointmentData.lastName}</span>
+                            <span className='text-[#565656]'>Consultation with <span className='text-[#627BFE] font-semibold'>Dr. {appointmentData.doctor}</span> </span>
+                        </div>
+
+                        <div className='text-[12px] text-white font-semibold justify-center
                      items-center absolute top-2 right-2 rounded-s-full px-2 py-1 bg-[#0176C5]'>
-                        No 03
-                    </div>
-                </div>
-
-                <div className='w-full flex flex-row border-[#565656] border-[1px] border-opacity-20 rounded-lg p-5 relative'>
-                    <div className='flex flex-col space-y-2'>
-                        <span className='text-[#565656]'>8.30 a.m</span>
-                        <span className='text-[#1a1a1a] font-semibold'>Pushpika Amarathunga</span>
-                        <span className='text-[#565656]'>Consultation with <span className='text-[#627BFE] font-semibold'>Dr. M.P De Silva</span> </span>
+                            No {getRoomNumber(appointmentData)}
+                        </div>
                     </div>
 
-                    <div className='text-[12px] text-white font-semibold justify-center
-                     items-center absolute top-2 right-2 rounded-s-full px-2 py-1 bg-[#0176C5]'>
-                        No 03
-                    </div>
-                </div>
+                ))}
 
 
-                <div className='w-full flex flex-row border-[#565656] border-[1px] border-opacity-20 rounded-lg p-5 relative'>
-                    <div className='flex flex-col space-y-2'>
-                        <span className='text-[#565656]'>8.30 a.m</span>
-                        <span className='text-[#1a1a1a] font-semibold'>Pushpika Amarathunga</span>
-                        <span className='text-[#565656]'>Consultation with <span className='text-[#627BFE] font-semibold'>Dr. M.P De Silva</span> </span>
-                    </div>
 
-                    <div className='text-[12px] text-white font-semibold justify-center
-                     items-center absolute top-2 right-2 rounded-s-full px-2 py-1 bg-[#0176C5]'>
-                        No 03
-                    </div>
-                </div>
-
-                <div className='w-full flex flex-row border-[#565656] border-[1px] border-opacity-20 rounded-lg p-5 relative'>
-                    <div className='flex flex-col space-y-2'>
-                        <span className='text-[#565656]'>8.30 a.m</span>
-                        <span className='text-[#1a1a1a] font-semibold'>Pushpika Amarathunga</span>
-                        <span className='text-[#565656]'>Consultation with <span className='text-[#627BFE] font-semibold'>Dr. M.P De Silva</span> </span>
-                    </div>
-
-                    <div className='text-[12px] text-white font-semibold justify-center
-                     items-center absolute top-2 right-2 rounded-s-full px-2 py-1 bg-[#0176C5]'>
-                        No 03
-                    </div>
-                </div>
 
             </div>
         </div>
