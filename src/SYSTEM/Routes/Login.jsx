@@ -33,42 +33,33 @@ function Login() {
 
 
 
-//////////// fine code
-
+const [errorMessage, setErrorMessage] = useState('');
 const handleLogin = async (values) => {
   try {
     const response = await axios.post(`${config.baseUrl}/login`, {
-      userID: values.userID,
-      password: values.password,
+      userID: values.userID.trim(),
+      password: values.password.trim(), // Send the password to the server
     });
 
-    const userRole = response.data.role;
-
-    if (userRole) {
-
-      console.log(`User Role: ${userRole}`);
-
-
-      localStorage.setItem('userRole', userRole);
-
-      if (userRole === 'admin') {
-
-        window.location.href = '/AdminDashboard';
-      } else if (userRole === 'doctor') {
-        window.location.href = '/DoctorDashboard';
-      }
+    if (response.data.message === 'UserID and password are matching') {
+      console.log('UserID and password are matching');
+      // Proceed with further actions (e.g., redirect to a dashboard)
     } else {
- 
-      console.error('Login error:', 'User not found');
-
+      console.error('Invalid User ID or password');
+      const error = response.data.error || 'Invalid User ID or password';
+      setErrorMessage(error);
     }
   } catch (error) {
-
     console.error('Login error:', error);
-
   }
-}
+};
 
+useEffect(() => {
+  // Handle the error message here, for example, display it to the user
+  if (errorMessage) {
+    document.getElementById('error-message').innerText = errorMessage;
+  }
+}, [errorMessage]);
 
 
 
@@ -185,6 +176,8 @@ const handleLogin = async (values) => {
                 Login
               </button>
 
+                     
+              
 
             </Form>
           )}

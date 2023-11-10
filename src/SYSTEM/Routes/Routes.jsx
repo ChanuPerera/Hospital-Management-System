@@ -82,7 +82,7 @@ function SystemRoutes() {
       ) : userRole === 'doctor' ? (
             <Route path="DoctorDashboard" element={<DoctorDashboard />} />
       ) : (
-        <Navigate to="/" replace />
+        <Route to="/" replace />
       )}
     </Routes>
   );

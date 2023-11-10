@@ -199,6 +199,12 @@ const SideNav = () => {
   // Slice the first 3 items from the navLinks array
   const displayedNavLinks = navLinks.slice(0, 5);
   const remainingNavLinks = navLinks.slice(5); // Get the rest of the links
+  
+  const handleSignout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    window.location.href = '/'; // Redirect to the login page
+  };
 
   return (
 
@@ -220,8 +226,10 @@ const SideNav = () => {
             renderNavLink(link, index + 5)
           )}{" "}
 
-          <Link to="/">
-            <div className="signout-btn child-link-outter-1 w-full sm:h-[48px] flex flex-row items-center text-center hover:text-white">
+          
+            <div 
+            onClick={handleSignout}
+            className="signout-btn child-link-outter-1 w-full sm:h-[48px] flex flex-row items-center text-center hover:text-white cursor-pointer">
               <div className="child-link-outter-2 lg:w-[75%] w-[80%] sm:w-auto px-6 sm:px-0 lg:px-6 lg:h-[48px] h-[32px]  rounded-[6px] justify-start items-center flex flex-row mx-auto">
                 <div className="sm:w-[32px] sm:h-[32px] rounded-[4px] flex justify-center items-center lg:mr-[16px] sm:mr-0 mr-[16px]">
                   <span className="ico-span text-[14px] text-[#565656]">
@@ -233,7 +241,7 @@ const SideNav = () => {
                 </span>
               </div>
             </div>
-          </Link>
+          
 
         </ul>
       </div>
