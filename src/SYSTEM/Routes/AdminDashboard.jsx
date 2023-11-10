@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import DashboardRightPanel from '../Components/DashboardRightPanel';
 import * as Icons from "@mui/icons-material";
+import { useLocation } from 'react-router-dom';
 // import { hover } from '@testing-library/user-event/dist/hover';
 import { ChevronRight } from "@mui/icons-material";
 import { Search, Menu, Logout, ArrowForwardIos, NotificationsActive } from "@mui/icons-material";
@@ -133,6 +134,8 @@ function AdminDashboard() {
         },[])
 
         
+        const location = useLocation();
+        const userID = new URLSearchParams(location.search).get('userID');
 
   return (
     <div className='w-full h-screen flex flex-row justify-between'>
@@ -218,6 +221,7 @@ function AdminDashboard() {
                   <div className='flex flex-col'>
                     <h4 className='text-[18pt] text-[#002459]'>{doctorCount}</h4>
                     <span className='text-[#565656] text-[14px]'>Available Doctors</span>
+                    
                   </div>
 
                 </div>
@@ -326,7 +330,7 @@ function AdminDashboard() {
       </div>
 
 
-      <DashboardRightPanel />
+      <DashboardRightPanel userID={userID}/>
 
 
     </div>

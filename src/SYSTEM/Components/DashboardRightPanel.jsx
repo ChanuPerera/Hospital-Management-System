@@ -5,7 +5,7 @@ import config from '../../config';
 import user from "../Assets/Images/user.png";
 import Calendar from './Calendar';
 
-function DashboardRightPanel() {
+function DashboardRightPanel({ userID}) {
 
 
 
@@ -61,7 +61,7 @@ function DashboardRightPanel() {
                         <div className='user flex flex-col spce-y-2'>
                             <h4 className='text-[#565656]'>Amali
                                 Gunathilake</h4>
-                            <h4 className='text-[#565656]'>User ID : 658326</h4>
+                            <h4 className='text-[#565656]'>User ID : { userID }</h4>
                         </div>
                         <div className=' w-[80px] h-[80px] rounded-full relative object-center'>
                             <img src={user} alt='' className='w-full h-full object-cover rounded-full' />

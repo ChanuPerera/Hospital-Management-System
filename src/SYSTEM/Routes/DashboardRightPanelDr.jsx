@@ -2,8 +2,16 @@ import React from 'react'
 
 import user from "../Assets/Images/user.png";
 import Calendar from '../Components/Calendar';
+import { useLocation } from 'react-router-dom';
+
 
 function DashboardRightPanelDr() {
+
+
+    const location = useLocation();
+        const userID = new URLSearchParams(location.search).get('userID');
+
+
     return (
         <div className='w-1/6 h-screen fixed right-0 border-collapse border-l-[1px] border-[#565656] border-opacity-10 lg:block hidden overflow-y-auto' id="style-7">
             <div className='right-nav-body p-5 flex flex-col space-y-5'>
@@ -11,7 +19,7 @@ function DashboardRightPanelDr() {
                     <div className='flex flex-row justify-between items-center'>
                         <div className='user flex flex-col spce-y-2'>
                             <h4 className='text-[#565656]'>Dr. P.J Liyanage</h4>
-                            <h4 className='text-[#565656]'>User ID : D067</h4>
+                            <h4 className='text-[#565656]'>User ID : {userID}</h4>
                         </div>
                         <div className=' w-[80px] h-[80px] rounded-full relative object-center'>
                             <img src={user} alt='' className='w-full h-full object-cover rounded-full' />
