@@ -4,7 +4,8 @@ import * as Icons from "@mui/icons-material";
 // import { hover } from '@testing-library/user-event/dist/hover';
 import { ChevronRight } from "@mui/icons-material";
 import { Search, Menu, Logout } from "@mui/icons-material";
-
+import axios from 'axios';
+import config from '../../config';
 
 
 /////////// Fine code with RESPONSIVE AND NAVIGATION Fixed ////////
@@ -200,10 +201,18 @@ const SideNav = () => {
   const displayedNavLinks = navLinks.slice(0, 5);
   const remainingNavLinks = navLinks.slice(5); // Get the rest of the links
   
-  const handleSignout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRole');
-    window.location.href = '/'; // Redirect to the login page
+  const handleSignout = async () => {
+    try {
+      // Remove token and userRole from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('userRole');
+  
+     
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Signout error:', error);
+      
+    }
   };
 
   return (

@@ -6,7 +6,8 @@ import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-i
 import google from "../Assets/Images/Google.png";
 import fb from "../Assets/Images/Facebook.png";
 import { Link } from "react-router-dom";
-
+import axios from 'axios';
+import config from '../../config';
 
 
 function Login() {
@@ -30,6 +31,65 @@ function Login() {
 
   });
 
+
+
+
+  // const handleWebUserLogin = async (values) => {
+  //   try {
+  //     // Send a POST request to the webuserlogin route
+  //     const response = await axios.post(`${config.baseUrl}/webuserlogin`, values);
+  
+  //     if (response.data.token) {
+  //       // Save the token to localStorage
+  //       localStorage.setItem('token', response.data.token);
+  
+  //       // Redirect the user to "/"
+  //       window.location.href = '/';
+  //     } else {
+  //       // Display an error message if the login fails
+  //       console.error('Login error:', 'Invalid username or password');
+  //     }
+  //   } catch (error) {
+  //     console.error('Login error:', error);
+  //   }
+  // };
+
+
+  const handleWebUserLogin = async (values) => {
+    try {
+      // console.log('Username:', values.username);
+      // console.log('Password:', values.password);
+  
+      // Send a POST request with the extracted fields
+      const response = await axios.post(`${config.baseUrl}/webuserlogin`, {
+        username: values.username,
+        password: values.password,
+      });
+  
+      console.log("Message from server:", response.data.message);
+  
+      // Handle the response accordingly
+      if (response.data.message === 'User found') {
+        // User found, redirect to another page
+        
+        console.log('User found!');
+        window.location.href = '/';
+      } else  {
+        // User not found or invalid password
+        document.getElementById('error-message').innerText = "Invalid username or password";
+        // console.log('Invalid username or password');
+      
+      }
+      
+  
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
+  
+  
+  
+
   return (
 
     <div className="w-full flex flex-col justify-center items-center bg-white h-screen">
@@ -51,11 +111,9 @@ function Login() {
             password: "",
           }}
           validationSchema={LoginSchema}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
+          onSubmit={handleWebUserLogin}
         >
-          {({ errors, touched }) => (
+          {({ errors, touched, values, handleChange }) => (
             <Form className="flex flex-col mb-[56px] lg:w-1/2 w-full ">
 
             
@@ -80,6 +138,8 @@ function Login() {
                     type="text"
                     name="username"
                     placeholder="User Name"
+                    value={values.username}
+                    onChange={handleChange}
                     className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                     required
                   />
@@ -110,6 +170,8 @@ function Login() {
                     className="form-field-input w-[90%] h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px]"
                     type={passwordVisible ? 'text' : 'password'}
                     name="password"
+                    value={values.password}
+                    onChange={handleChange}
                     required
                   />
                   <div className="h-[38px] w-[38px] rounded-bl-[6px] rounded-tl-[6px] justify-center items-center flex">
@@ -153,9 +215,14 @@ function Login() {
               </div>
 
               <button
+              onClick={handleWebUserLogin}
               type="submit" className="w-full h-[44px] rounded-md text-white text-[16px] bg-gradient-to-r from-[#627BFE] to-[#3D56DA] mt-5">
                         Login
               </button>
+
+
+              <span id="error-message" className="text-red-600 text-[12px] mt-1 mx-auto"></span>
+
 
               <div className="w-full flex flex-row justify-between mt-5">
                 <div className="w-2/5 relative h-full">

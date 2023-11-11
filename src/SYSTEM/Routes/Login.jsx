@@ -37,6 +37,40 @@ const [errorMessage, setErrorMessage] = useState('');
 
 
 
+// const handleLogin = async (values) => {
+//   try {
+//     const response = await axios.post(`${config.baseUrl}/login`, {
+//       userID: values.userID,
+//       password: values.password,
+//     });
+
+//     if (response.data.message === 'UserID and password are matching') {
+//       console.log(`UserID and password are matching. Role: ${response.data.role}`);
+
+//       // Save user role to localStorage
+//       localStorage.setItem('userRole', response.data.role);
+
+//       // Redirect based on the user role
+//       const userRole = response.data.role;
+//       if (userRole === 'admin') {
+//         window.location.href = `/AdminDashboard?userID=${response.data.userID}`;
+//       } else if (userRole === 'doctor') {
+//         window.location.href = `/DoctorDashboard?userID=${response.data.userID}`;
+//       }
+//     } else {
+//       console.error('Invalid User ID or password');
+//       const error = response.data.error || 'Invalid User ID or password';
+//       setErrorMessage(error);
+//     }
+//   } catch (error) {
+//     console.error('Login error:', error);
+//   }
+// };
+
+
+
+
+
 const handleLogin = async (values) => {
   try {
     const response = await axios.post(`${config.baseUrl}/login`, {
@@ -47,15 +81,16 @@ const handleLogin = async (values) => {
     if (response.data.message === 'UserID and password are matching') {
       console.log(`UserID and password are matching. Role: ${response.data.role}`);
 
-      // Save user role to localStorage
+      // Save token and user role to localStorage
       localStorage.setItem('userRole', response.data.role);
+      localStorage.setItem('token', response.data.token);
 
       // Redirect based on the user role
       const userRole = response.data.role;
       if (userRole === 'admin') {
-        window.location.href = `/AdminDashboard?userID=${response.data.userID}`;
+        window.location.href = '/AdminDashboard';
       } else if (userRole === 'doctor') {
-        window.location.href = `/DoctorDashboard?userID=${response.data.userID}`;
+        window.location.href = '/DoctorDashboard';
       }
     } else {
       console.error('Invalid User ID or password');
@@ -66,8 +101,6 @@ const handleLogin = async (values) => {
     console.error('Login error:', error);
   }
 };
-
-
 
 
 
