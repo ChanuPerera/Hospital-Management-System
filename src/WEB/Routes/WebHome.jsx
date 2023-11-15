@@ -3,13 +3,17 @@ import TopNav from "../Components/TopNav";
 import Slider1 from "../Assets/Images/slider1_Mesa de trabajo 1.png";
 import Footer from "../Components/Footer";
 import AppointmentForm from "../Components/AppoinementForm";
+import { jwtDecode } from "jwt-decode" 
 
+import config from '../../config';
+
+import axios from 'axios';
 
 
 const Home = () => {
 
     const [isPopUpOpen, setPopUpOpen] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState(null); // State to store the selected doctor data
+  // State to store the selected doctor data
 
   const openPopUp = (doctorData) => {
     setSelectedDoctor(doctorData); // Set the selected doctor data
@@ -20,32 +24,93 @@ const Home = () => {
     setPopUpOpen(false);
   };
 
+ 
 
-    const DoctorData = [
-        {
-            name: "G. Dinesh Karunarathne",
-            specialize: "Cancer Surgeon",
-            hospital: "City Hospital - Colombo",
-            time: "8.30 am",
-            status: "Available"
-        },
-        {
-            name: "L.D.K Opanayake",
-            specialize: "Anaesthetist",
-            hospital: "City Hospital - Colombo",
-            time: "6.30 pm",
-            status: "Unavailable"
-        },
-        {
-            name: "Pushpika Senarathne",
-            specialize: "Clinical Physiologist",
-            hospital: "Lanka Hospital - Colombo",
-            time: "2.30 pm",
-            status: "Available"
-        },
-    ]
+    const decodeToken = (token) => {
+      try {
+        const decoded = jwtDecode(token);
+        return decoded;
+      } catch (error) {
+        console.error("Token decoding error:", error);
+        return null;
+      }
+    };
+  
+    useEffect(() => {
+      // Get the token from localStorage
+      const token = localStorage.getItem("jwtToken");
+
+      // Decode the token
+      const decodedUser = decodeToken(token);
+  
+      // Now you can access user details
+      if (decodedUser) {
+        console.log("Decoded User Data:", decodedUser);
+       console.log("email:", decodedUser.email)
+      }
+    }, []); 
 
 
+
+    const [doctors, setDoctors] = useState([]);
+
+    const fetchDoctors = async () => {
+      try {
+        const response = await axios.get(`${config.baseUrl}/doctors`);
+        console.log('Response from the server:', response.data);
+        setDoctors(response.data);
+      } catch (error) {
+        console.error('Error fetching doctor data:', error);
+        console.error('Error response data:', error.response.data);
+      }
+    };
+  
+    useEffect(() => {
+      fetchDoctors();
+    }, []);
+  
+    console.log('Doctors state:', doctors);
+
+
+
+
+
+    const [selectedDoctor, setSelectedDoctor] = useState("");
+  const [selectedSpecialize, setSelectedSpecialize] = useState("");
+  const [selectedHospital, setSelectedHospital] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const handleDoctorChange = (event) => {
+    setSelectedDoctor(event.target.value);
+    // Reset other selects
+    setSelectedSpecialize("");
+    setSelectedHospital("");
+    setSelectedDate("");
+  };
+
+  const handleSpecializeChange = (event) => {
+    setSelectedSpecialize(event.target.value);
+    // Reset other selects
+    setSelectedDoctor("");
+    setSelectedHospital("");
+    setSelectedDate("");
+  };
+
+  const handleHospitalChange = (event) => {
+    setSelectedHospital(event.target.value);
+    // Reset other selects
+    setSelectedDoctor("");
+    setSelectedSpecialize("");
+    setSelectedDate("");
+  };
+
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+    // Reset other selects
+    setSelectedDoctor("");
+    setSelectedSpecialize("");
+    setSelectedHospital("");
+  };
 
 
 
@@ -63,6 +128,7 @@ const Home = () => {
                     <div className="flex flex-row justify-between w-full" >
                         <div className="w-[30%] ">
                             <h3 className="text-[#002459] font-semibold text-[18pt]">Request Appointment</h3>
+                            
                         </div>
                         <div className="w-full h-auto flex flex-col relative">
                             <div className="w-full h-1/2 absolute top-0 border-collapse border-b-[1px] border-[#002459] ">
@@ -74,32 +140,48 @@ const Home = () => {
 
                     <div className="app-table w-full mt-5 bg-[#0176C5] rounded-xl p-5">
                         <div className="flex flex-row space-x-5">
-                            <select className="w-1/5 outline-none border-[#565656] rounded-md p-2 px-2">
-                                <option>Select Doctor</option>
-                                <option>Doctor 1</option>
-                                <option>Doctor 2</option>
-                                <option>Doctor 3</option>
+                            <select className="w-1/5 outline-none border-[#565656] rounded-md p-2 px-2"
+                            value={selectedDoctor}
+        onChange={handleDoctorChange}
+        >
+                            <option value="">Select a doctor</option>
+                                                    {doctors.map((doctor) => (
+                                                        <option key={doctor._id} value={doctor.fullname}>
+                                                            {doctor.fullname}
+                                                        </option>
+                                                    ))}
                             </select>
 
-                            <select className="w-1/5 outline-none border-[#565656] rounded-md p-2 px-2">
+                            <select className="w-1/5 outline-none border-[#565656] rounded-md p-2 px-2"
+                            value={selectedSpecialize}
+        onChange={handleSpecializeChange}
+        >
                                 <option>Select Specialize</option>
-                                <option>Doctor 1</option>
-                                <option>Doctor 2</option>
-                                <option>Doctor 3</option>
+                                {doctors.map((doctor) => (
+                                                        <option key={doctor._id} value={doctor.specialize}>
+                                                            {doctor.specialize}
+                                                        </option>
+                                                    ))}
                             </select>
 
-                            <select className="w-1/5 outline-none border-[#565656] rounded-md p-2 px-2">
+                            <select className="w-1/5 outline-none border-[#565656] rounded-md p-2 px-2"
+                            value={selectedHospital}
+        onChange={handleHospitalChange}>
                                 <option>Select Hospital</option>
-                                <option>Doctor 1</option>
-                                <option>Doctor 2</option>
-                                <option>Doctor 3</option>
+                                <option>City Hospital</option>
                             </select>
 
-                            <select className="w-1/5 outline-none border-[#565656] rounded-md p-2 px-2">
+                            <select className="w-1/5 outline-none border-[#565656] rounded-md p-2 px-2"
+                            value={selectedDate}
+        onChange={handleDateChange}>
                                 <option>Select Date</option>
-                                <option>Doctor 1</option>
-                                <option>Doctor 2</option>
-                                <option>Doctor 3</option>
+                                <option>Monday</option>
+                                <option>Tuesday</option>
+                                <option>Wednesday</option>
+                                <option>Thursday</option>
+                                <option>Frieday</option>
+                                <option>Saturday</option>
+                                <option>Sunday</option>
                             </select>
 
 
@@ -118,7 +200,7 @@ const Home = () => {
                                 <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 ">Action</th>
 
 
-                                {DoctorData.map((doctor, index) => {
+                                {doctors.map((doctor, index) => {
 
                                     let textColor;
                                     let visibility;
@@ -138,7 +220,7 @@ const Home = () => {
 
                                         <tr className="py-2 w-full" key={index}>
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {doctor.name}
+                                                {doctor.fullname}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
@@ -146,7 +228,7 @@ const Home = () => {
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {doctor.hospital}
+                                                City Hospital
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
@@ -175,7 +257,7 @@ const Home = () => {
 
                         {isPopUpOpen && selectedDoctor && (
         <AppointmentForm
-          doctorData={selectedDoctor} // Pass the selected doctor data to AppointmentForm
+          doctorData={selectedDoctor} 
           onClose={closePopUp}
         />
       )}

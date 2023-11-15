@@ -54,9 +54,9 @@ const AppointmentForm = ({ doctorData, onClose }) => {
                     </div>
                     <div className='flex flex-row justify-between mt-1'>
                         <div className='flex flex-col'>
-                            <h3 className='text-[#565656]'>Request Appointment for <span className='text-[#627BFE] font-semibold'>Dr.{doctorData.name} </span></h3>
+                            <h3 className='text-[#565656]'>Request Appointment for <span className='text-[#627BFE] font-semibold'>Dr.{doctorData.fullname} </span></h3>
                             <p>Specialize: {doctorData.specialize}</p>
-                            <p>Hospital: {doctorData.hospital}</p>
+                            <p>Hospital: City Hospital</p>
                             <p>Time: {doctorData.time}</p>
                         </div>
 

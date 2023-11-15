@@ -33,66 +33,111 @@ function Login() {
 
 
 
-
-  // const handleWebUserLogin = async (values) => {
+//1 fine
+   // const handleWebUserLogin = async (values) => {
   //   try {
-  //     // Send a POST request to the webuserlogin route
-  //     const response = await axios.post(`${config.baseUrl}/webuserlogin`, values);
+     
   
-  //     if (response.data.token) {
-  //       // Save the token to localStorage
-  //       localStorage.setItem('token', response.data.token);
+  //     // Send a POST request with the extracted fields
+  //     const response = await axios.post(`${config.baseUrl}/webuserlogin`, {
+  //       username: values.username,
+  //       password: values.password,
+  //     });
   
-  //       // Redirect the user to "/"
+  //     console.log("Message from server:", response.data.message);
+  
+  //     // Handle the response accordingly
+  //     if (response.data.message === 'User found') {
+  //       // User found, redirect to another page
+        
+  //       console.log('User found!');
   //       window.location.href = '/';
-  //     } else {
-  //       // Display an error message if the login fails
-  //       console.error('Login error:', 'Invalid username or password');
+  //     } else if (response.data.message === 'User not found')  {
+  //       // User not found or invalid password
+  //       document.getElementById('error-message').innerText = "Invalid Username";
+  //       // console.log('Invalid username or password');
+      
   //     }
+  //     else if (response.data.message === 'Invalid Password')
+  //     {
+  //       document.getElementById('error-message').innerText = "Invalid Password";
+  //     }
+
   //   } catch (error) {
   //     console.error('Login error:', error);
   //   }
   // };
+  
+  
+  
+
+  // const handleWebUserLogin = async (values) => {
+  //   try {
+  //     // Send a POST request with the extracted fields
+  //     const response = await axios.post(`${config.baseUrl}/webuserlogin`, {
+  //       username: values.username,
+  //       password: values.password,
+  //     });
+  
+  //     console.log("Message from server:", response.data.message);
+
+  //     if (response.data.message === 'User found') 
+  //     {
+  //       const user = response.data.user;
+  //       console.log('User found:', user);
+  //       document.getElementById('info-message').innerText = "User Verified!";
+  //       document.getElementById('error-message').innerText = "";
+  //       // window.location.href = '/';
+  //     } else if (response.data.message === 'User not found') {
+  //       document.getElementById('error-message').innerText = "Invalid Username";
+  //     } else if (response.data.message === 'Invalid Password') {
+  //       document.getElementById('error-message').innerText = "Invalid Password";
+  //     }
+  //   } catch (error) {
+  //     console.error('Login error:', error);
+  //     document.getElementById('error-message').innerText = "Something went wrong. Please try again.";
+  //   }
+  // };
+
+  
+
 
 
   const handleWebUserLogin = async (values) => {
     try {
-      // console.log('Username:', values.username);
-      // console.log('Password:', values.password);
-  
       // Send a POST request with the extracted fields
       const response = await axios.post(`${config.baseUrl}/webuserlogin`, {
         username: values.username,
         password: values.password,
       });
-  
+
       console.log("Message from server:", response.data.message);
-  
+
       // Handle the response accordingly
       if (response.data.message === 'User found') {
-        // User found, redirect to another page
-        
+        document.getElementById('info-message').innerText = "User Verified!";
+        document.getElementById('error-message').innerText = "";
         console.log('User found!');
+        // Extract the token from the response
+        const { token } = response.data;
+        // Save the token to localStorage or sessionStorage
+        localStorage.setItem('jwtToken', token); // You may use sessionStorage if you want the token to be session-specific
+        
         window.location.href = '/';
-      } else if (response.data.message === 'User not found')  {
+        // document.getElementById('info-message').innerText = response.data.token;
+       
+      } else if (response.data.message === 'User not found') {
         // User not found or invalid password
         document.getElementById('error-message').innerText = "Invalid Username";
-        // console.log('Invalid username or password');
-      
-      }
-      else if (response.data.message === 'Invalid Password')
-      {
+      } else if (response.data.message === 'Invalid Password') {
         document.getElementById('error-message').innerText = "Invalid Password";
       }
-      
-  
     } catch (error) {
       console.error('Login error:', error);
     }
   };
-  
-  
-  
+
+
 
   return (
 
@@ -219,12 +264,12 @@ function Login() {
               </div>
 
               <button
-              onClick={handleWebUserLogin}
-              type="submit" className="w-full h-[44px] rounded-md text-white text-[16px] bg-gradient-to-r from-[#627BFE] to-[#3D56DA] mt-5">
+              type="submit" 
+              className="w-full h-[44px] rounded-md text-white text-[16px] bg-gradient-to-r from-[#627BFE] to-[#3D56DA] mt-5">
                         Login
               </button>
 
-
+              <span id="info-message" className="text-green-600 text-[12px] mt-1 mx-auto"></span>
               <span id="error-message" className="text-red-600 text-[12px] mt-1 mx-auto"></span>
 
 

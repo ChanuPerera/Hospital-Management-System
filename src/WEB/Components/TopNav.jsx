@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode" 
 
+import config from '../../config';
+
+import axios from 'axios';
 
 function TopNav () {
 
@@ -12,6 +16,40 @@ function TopNav () {
     }
 
 
+    
+    const decodeToken = (token) => {
+        try {
+          const decoded = jwtDecode(token);
+          return decoded;
+        } catch (error) {
+          console.error("Token decoding error:", error);
+          return null;
+        }
+      };
+    
+      useEffect(() => {
+        // Get the token from localStorage
+        const token = localStorage.getItem("jwtToken");
+  
+        if(token)
+        {
+          document.getElementById('head-button').innerText = "Sign Out";
+        }
+        else
+        {
+          document.getElementById('head-button').innerText = "Signin";
+        }
+    
+        // Decode the token
+        const decodedUser = decodeToken(token);
+    
+        // Now you can access user details
+        if (decodedUser) {
+          console.log("Decoded User Data:", decodedUser);
+         console.log("email:", decodedUser.email)
+        }
+      }, []); 
+
     return(
         <div className="nav-wrapper w-full h-[96px] bg-white flex flex-col py-3">
             <div className="top-nav-body w-[70%] h-full flex flex-row justify-between items-center mx-auto bg-white">
@@ -20,8 +58,8 @@ function TopNav () {
                 </div>
 
                 <div className="signin">
-                    <button className="px-4 py-2 rounded-full bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white text-[14px]" onClick={DirectLogin}>
-                        Sign in
+                    <button className="px-4 py-2 rounded-full bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white text-[14px]" onClick={DirectLogin} id="head-button">
+                    
                     </button>
                 </div>
             </div>

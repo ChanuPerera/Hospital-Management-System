@@ -212,7 +212,7 @@ const handleLogin = async (values) => {
               </div>
 
               <button
-                onClick={handleLogin}
+               
                 type="submit" className="w-full h-[44px] rounded-md text-white text-[16px] bg-gradient-to-r from-[#627BFE] to-[#3D56DA] mt-5">
                 Login
               </button>
