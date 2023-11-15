@@ -74,11 +74,15 @@ function Login() {
         
         console.log('User found!');
         window.location.href = '/';
-      } else  {
+      } else if (response.data.message === 'User not found')  {
         // User not found or invalid password
-        document.getElementById('error-message').innerText = "Invalid username or password";
+        document.getElementById('error-message').innerText = "Invalid Username";
         // console.log('Invalid username or password');
       
+      }
+      else if (response.data.message === 'Invalid Password')
+      {
+        document.getElementById('error-message').innerText = "Invalid Password";
       }
       
   
