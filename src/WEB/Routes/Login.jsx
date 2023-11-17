@@ -123,7 +123,7 @@ function Login() {
         // Save the token to localStorage or sessionStorage
         localStorage.setItem('jwtToken', token); // You may use sessionStorage if you want the token to be session-specific
         
-        window.location.href = '/';
+        window.location.href = '/Home';
         // document.getElementById('info-message').innerText = response.data.token;
        
       } else if (response.data.message === 'User not found') {

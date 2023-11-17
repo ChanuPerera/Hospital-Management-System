@@ -9,9 +9,9 @@ function WebRoutes() {
   return (
   
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
         <Route path="MyAppointments" element={<MyAppointments />} />
-        <Route path="Login" element={<Login />} />
+        <Route path="Home" element={<Home />} />
         <Route path="Register" element={<Register />} />
       </Routes>
   

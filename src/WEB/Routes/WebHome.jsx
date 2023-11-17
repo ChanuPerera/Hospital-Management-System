@@ -12,11 +12,11 @@ import axios from 'axios';
 
 const Home = () => {
 
-    const [isPopUpOpen, setPopUpOpen] = useState(false);
-  // State to store the selected doctor data
+  const [isPopUpOpen, setPopUpOpen] = useState(false);
+
 
   const openPopUp = (doctorData) => {
-    setSelectedDoctor(doctorData); // Set the selected doctor data
+    setSelectedDoctor(doctorData); 
     setPopUpOpen(true);
   };
 
@@ -37,16 +37,17 @@ const Home = () => {
     };
   
     useEffect(() => {
-      // Get the token from localStorage
+  
       const token = localStorage.getItem("jwtToken");
 
-      // Decode the token
+    
       const decodedUser = decodeToken(token);
   
-      // Now you can access user details
+
       if (decodedUser) {
         console.log("Decoded User Data:", decodedUser);
        console.log("email:", decodedUser.email)
+       console.log("username:", decodedUser.username)
       }
     }, []); 
 
@@ -128,7 +129,7 @@ const Home = () => {
                     <div className="flex flex-row justify-between w-full" >
                         <div className="w-[30%] ">
                             <h3 className="text-[#002459] font-semibold text-[18pt]">Request Appointment</h3>
-                            
+
                         </div>
                         <div className="w-full h-auto flex flex-col relative">
                             <div className="w-full h-1/2 absolute top-0 border-collapse border-b-[1px] border-[#002459] ">

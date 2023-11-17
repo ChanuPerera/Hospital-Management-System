@@ -1,9 +1,17 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import config from '../../config';
+
+import { jwtDecode } from "jwt-decode" 
+
+
+
 
 const AppointmentForm = ({ doctorData, onClose }) => {
 
@@ -20,7 +28,6 @@ const AppointmentForm = ({ doctorData, onClose }) => {
             .matches(/^[A-Za-z]+$/, "Must be only Letters")
             .required('Required'),
         age: Yup.string()
-            .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Must be only Digits")
             .required('Required'),
         contactNumber: Yup.string()
             .min(10, 'Invalid Number')
@@ -33,9 +40,252 @@ const AppointmentForm = ({ doctorData, onClose }) => {
 
 
 
-    if (!doctorData) {
-        return null; // Return null if no doctorData is provided
+    const [decodedUser, setDecodedUser] = useState(null);
+    const [webUserResponse, setWebUserResponse] = useState(null);
+    const decodeToken = (token) => {
+        try {
+          const decoded = jwtDecode(token);
+          return decoded;
+        } catch (error) {
+          console.error("Token decoding error:", error);
+          return null;
+        }
+      };
+      useEffect(() => {
+        const token = localStorage.getItem("jwtToken");
+        const decodedUser = decodeToken(token);
+    
+        if (decodedUser) {
+          console.log("Decoded User Data:", decodedUser);
+          setDecodedUser(decodedUser); // Save decoded user data to state
+    
+          // Example: Accessing the username and making an axios request
+          const fetchWebUser = async () => {
+            try {
+              const response = await axios.get(
+                `${config.baseUrl}/webUser/byName/${decodedUser.username}`
+              );
+              setWebUserResponse(response.data);
+            } catch (error) {
+              console.error("Error fetching web user:", error);
+            }
+          };
+    
+          fetchWebUser();
+        }
+      }, []); 
+
+      
+
+
+
+    async function generateUniqueReferenceNumber() {
+        try {
+            const response = await axios.get(`${config.baseUrl}/webUserappointments/count`);
+            const patientCount = response.data.count; 
+
+            const newIndex = patientCount + 1;
+
+            const referenceNo = `#WEB00REF${newIndex}`;
+
+            return referenceNo;
+        } catch (error) {
+            console.error('Error generating reference number:', error);
+            throw error;
+        }
     }
+
+
+    async function generateAppointmentNo() {
+        try {
+            const response = await axios.get(`${config.baseUrl}/webUserappointments/count`);
+            const patientCount = response.data.count; 
+
+            const newIndex = patientCount + 1;
+
+            const appointmentNo = `#WEB00AP${newIndex}`;
+
+            return appointmentNo;
+        } catch (error) {
+            console.error('Error generating appointment number:', error);
+            throw error;
+        }
+    }
+
+
+
+    
+
+    // const handleAddNewAppointment = async (values) => {
+    //     try {
+     
+    //       const referenceNo = await generateUniqueReferenceNumber();
+    //       const appointmentNo = await generateAppointmentNo();
+    //       values.referenceNo = referenceNo;
+    //       values.appointmentNo = appointmentNo;
+    //       values.doctor = doctorData.fullname;
+    //       values.date = "Monday";
+    //       values.time  = doctorData.time;
+      
+    //       console.log('Form Data:', values);
+      
+    //       // Fetch the doctor's ObjectId based on the doctor's name
+    //       const doctorResponse = await axios.get(`${config.baseUrl}/doctors/byName/${values.doctor}`);
+    //     //   const webUserResponse = await axios.get(`${config.baseUrl}/webUser/byName/${decodedUser.username}`);
+          
+    //       if (doctorResponse.data && doctorResponse.data.doctorId ) {
+    //         const doctorId = doctorResponse.data.doctorId;
+    //         console.log('Doctor ObjectId:', doctorId);
+      
+    //         // Create a new appointment
+    //         const response = await axios.post(`${config.baseUrl}/addWebUserNewAppointment`, values);
+      
+    //         if (response.data.message === "Appointment Submitted successfully") {
+    //           // Update the doctor's appointmentNos array with the appointmentNo
+    //           await axios.put(`${config.baseUrl}/doctors/updateAppointments/${doctorId}`, {
+    //             appointmentId:appointmentNo, // Assuming the response contains the new appointment's ID
+    //           });
+      
+    //           console.log('Appointment added to doctor:', response.data);
+    //           onClose();
+    //         } else {
+    //           console.log('Appointment submission failed.');
+    //         }
+    //       } else {
+    //         console.log('Doctor not found.');
+    //       }
+
+    //     } catch (error) {
+    //       console.error('Error:', error);
+    //     }
+    //   };
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const handleAddNewAppointment = async (values) => {
+        try {
+            const referenceNo = await generateUniqueReferenceNumber();
+            const appointmentNo = await generateAppointmentNo();
+            values.referenceNo = referenceNo;
+            values.appointmentNo = appointmentNo;
+            values.doctor = doctorData.fullname;
+            values.date = "Monday";
+            values.time = doctorData.time;
+    
+            console.log('Form Data:', values);
+    
+            // Fetch the doctor's ObjectId based on the doctor's name
+            const doctorResponse = await axios.get(`${config.baseUrl}/doctors/byName/${values.doctor}`);
+            // const webUserResponse = await axios.get(`${config.baseUrl}/webUser/byName/${decodedUser.username}`);
+    
+            if (doctorResponse.data && doctorResponse.data.doctorId) {
+                const doctorId = doctorResponse.data.doctorId;
+                console.log('Doctor ObjectId:', doctorId);
+    
+                // Create a new appointment
+                const response = await axios.post(`${config.baseUrl}/addWebUserNewAppointment`, values);
+    
+                if (response.data.message === "Appointment Submitted successfully") {
+                    // Update the doctor's appointmentNos array with the appointmentNo
+                    await axios.put(`${config.baseUrl}/doctors/updateAppointments/${doctorId}`, {
+                        appointmentId: appointmentNo, // Assuming the response contains the new appointment's ID
+                    });
+    
+                    // Update the user's appointmentNos array with the appointmentNo
+                    const userResponse = await axios.put(`${config.baseUrl}/webUser/updateAppointments`, {
+                        username: decodedUser.username,
+                        appointmentId: appointmentNo,
+                    });
+    
+                    if (userResponse.data.message === "Appointment added to user successfully") {
+                        console.log('Appointment added to user:', userResponse.data);
+                    } else {
+                        console.log('Failed to update user appointmentNos.');
+                    }
+    
+                    onClose();
+                } else {
+                    console.log('Appointment submission failed.');
+                }
+            } else {
+                console.log('Doctor not found.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    
+
+   
+
+
+      const [nextReferenceNo, setNextReferenceNo] = useState('');
+      const [nextAppointmentNo, setNextAppointmentNo] = useState('');
+      useEffect(() => {
+          async function fetchNextReferenceNo() {
+              try {
+                  const referenceNo = await generateUniqueReferenceNumber();
+                  setNextReferenceNo(referenceNo);
+              } catch (error) {
+                  console.error('Error fetching reference number:', error);
+              }
+          }
+  
+          fetchNextReferenceNo();
+      }, []);
+  
+  
+      useEffect(() => {
+          async function fetchNextAppointmentNo() {
+              try {
+                  const appointmentNo = await generateAppointmentNo();
+                  setNextAppointmentNo(appointmentNo);
+              } catch (error) {
+                  console.error('Error fetching appointment number:', error);
+              }
+          }
+  
+  
+          fetchNextAppointmentNo();
+      }, []);
+
 
     return (
         <Popup
@@ -58,11 +308,12 @@ const AppointmentForm = ({ doctorData, onClose }) => {
                             <p>Specialize: {doctorData.specialize}</p>
                             <p>Hospital: City Hospital</p>
                             <p>Time: {doctorData.time}</p>
+                             <p>Username: {decodedUser && decodedUser.username}</p>
                         </div>
 
                         <div className='flex flex-col'>
-                            <h3 className='text-[1.2rem] font-semibold text-[#565656]'>Reference no : 654996</h3>
-                            <h3 className='text-[1rem] font-semibold text-[#565656]'>Appointment no : 3</h3>
+                            <h3 className='text-[1.2rem] font-semibold text-[#565656]'>Reference no : {nextReferenceNo}</h3>
+                            <h3 className='text-[1rem] font-semibold text-[#565656]'>Appointment no : {nextAppointmentNo}</h3>
                         </div>
                     </div>
 
@@ -72,20 +323,20 @@ const AppointmentForm = ({ doctorData, onClose }) => {
 
                     <Formik
                         initialValues={{
-                            firstName: "",
-                            lastName: "",
-                            age: "",
-                            contactNumber: "",
-                            email: "",
+                            firstName: '',
+                            lastName: '',
+                            age: '',
+                            contactNumber: '',
                             gender: '',
+                            address: '',
+                            email:'',
+                            doctor: '',
 
                         }}
                         validationSchema={AppointmentSchema}
-                        onSubmit={(values) => {
-                            console.log(values);
-                        }}
+                        onSubmit={handleAddNewAppointment}
                     >
-                        {({ errors, touched }) => (
+                        {({ errors, touched, handleChange, values }) => (
                             <Form className="flex flex-col mb-[24px] w-full ">
 
 
@@ -109,6 +360,8 @@ const AppointmentForm = ({ doctorData, onClose }) => {
                                                 type="text"
                                                 name="firstName"
                                                 placeholder="First Name"
+                                                value={values.firstName}
+                                                onChange={handleChange}
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
@@ -138,6 +391,8 @@ const AppointmentForm = ({ doctorData, onClose }) => {
                                                 type="text"
                                                 name="lastName"
                                                 placeholder="Last Name"
+                                                value={values.lastName}
+                                                onChange={handleChange}
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
@@ -173,6 +428,8 @@ const AppointmentForm = ({ doctorData, onClose }) => {
                                                 type="text"
                                                 name="age"
                                                 placeholder="Age"
+                                                value={values.age}
+                                                onChange={handleChange}
                                                 className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                                 required
                                             />
@@ -258,6 +515,8 @@ const AppointmentForm = ({ doctorData, onClose }) => {
                                             type="text"
                                             name="contactNumber"
                                             placeholder="Contact Number"
+                                            value={values.contactNumber}
+                                            onChange={handleChange}
                                             className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                             required
                                         />
@@ -287,6 +546,8 @@ const AppointmentForm = ({ doctorData, onClose }) => {
                                             type="text"
                                             name="email"
                                             placeholder="Email"
+                                            value={values.email}
+                                            onChange={handleChange}
                                             className="w-full h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px] form-control form-field-input"
                                             required
                                         />
@@ -308,7 +569,9 @@ const AppointmentForm = ({ doctorData, onClose }) => {
 
 
 
-                                <button className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
+                                <button 
+                                type='submit'
+                                className="w-full rounded-md bg-gradient-to-r from-[#627BFE] to-[#3D56DA] text-white uppercase font-semibold py-2 mt-5">
                                     Submit
                                 </button>
 

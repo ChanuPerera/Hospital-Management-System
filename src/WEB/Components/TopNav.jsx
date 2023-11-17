@@ -12,7 +12,7 @@ function TopNav () {
 
     const DirectLogin = () =>
     {
-        navigate('/Login');
+        navigate('/');
     }
 
 

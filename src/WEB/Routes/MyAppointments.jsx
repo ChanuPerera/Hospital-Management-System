@@ -5,7 +5,10 @@ import Footer from "../Components/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faDownload } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode" 
 
+import config from '../../config';
+import axios from 'axios';
 
 
 const  MyAppointments = () => {
@@ -13,27 +16,55 @@ const  MyAppointments = () => {
 
 
 
-    const AppointmentData = [
-        {
-            patient: "Amali Silva",
-            doctor:"G. Dinesh Karunarathne",
-            hospital: "City Hospital - Colombo",
-            date: "15-Jan-2023",
-            reference: "23569885"
-        },
-        {
-            patient: "Pradeep Silva",
-            doctor:"L.D.K Opanayake",
-            hospital: "Lanka Hospital - Colombo",
-            date: "18-March-2023",
-            reference: "22335402"
-        },
-      
-    ]
+    const decodeToken = (token) => {
+      try {
+        const decoded = jwtDecode(token);
+        return decoded;
+      } catch (error) {
+        console.error("Token decoding error:", error);
+        return null;
+      }
+    };
+  
+    useEffect(() => {
+      const token = localStorage.getItem("jwtToken");
+      const decodedUser = decodeToken(token);
+  
+      if (decodedUser) {
+        console.log("Decoded WebUser Data:", decodedUser);
+      }
+    }, []);
 
 
+    const [myAppointments, setMyAppointments] = useState([]);
 
 
+const fetchMyAppointments = async () => {
+    try {
+      const token = localStorage.getItem("jwtToken");
+      const decodedUser = decodeToken(token);
+  
+      if (decodedUser) {
+        const response = await axios.get(`${config.baseUrl}/webUser/byName/${decodedUser.username}`);
+        console.log('AppointmentNos for the current user:', response.data.appointmentNos);
+  
+        // Send the appointmentNos directly to the server
+        const appointmentsDetails = await axios.post(`${config.baseUrl}/webUserAppointments/byAppointmentNos`, {
+          appointmentNos: response.data.appointmentNos,
+        });
+  
+        console.log('Appointment details for the current user:', appointmentsDetails.data);
+        setMyAppointments(appointmentsDetails.data);
+      }
+    } catch (error) {
+      console.error('Error fetching myAppointments data:', error);
+      console.error('Error response data:', error.response.data);
+    }
+  };
+  
+  useEffect(() => {
+    fetchMyAppointments();
+  }, []);
 
 
     return (
@@ -43,7 +74,7 @@ const  MyAppointments = () => {
 
             <div className="main-body w-[70%]  relative flex flex-col mx-auto mt-10 py-5 h-screen">
             <div className="">
-            <Link to="/" className="space-x-3">
+            <Link to="/Home" className="space-x-3">
             <FontAwesomeIcon icon={faArrowLeft} /><span className="text-[18px]">Back</span>
             </Link> 
 </div>
@@ -73,9 +104,9 @@ const  MyAppointments = () => {
                                 <th className="font-normal bg-[#627BFE] bg-opacity-25 py-2 ">Prescription</th>
 
 
-                                {AppointmentData.map((appointment, index) => {
+                                {myAppointments.map((appointment, index) => {
 
-                                   
+let fullName = appointment.firstName +` `+ appointment.lastName;
 
 
                                     return (
@@ -87,7 +118,7 @@ const  MyAppointments = () => {
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {appointment.patient}
+                                                {fullName}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
@@ -95,7 +126,7 @@ const  MyAppointments = () => {
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {appointment.hospital}
+                                                City Hospital
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20" >
@@ -103,7 +134,7 @@ const  MyAppointments = () => {
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20" >
-                                                {appointment.reference}
+                                                {appointment.referenceNo}
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20 text-center" >
