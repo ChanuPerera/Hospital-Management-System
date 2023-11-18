@@ -84,28 +84,7 @@ const fetchMyAppointments = async () => {
 
 
 
-  const [prescriptions, setPrescriptions] = useState([]);
-  const fetchPrescriptions = async (appointmentNos) => {
-    try {
-      const prescriptionResponse = await axios.get(`${config.baseUrl}/prescriptions/byAppointmentNos`, {
-        appointmentNos,
-      });
 
-      console.log('Prescription details for the current user:', prescriptionResponse.data);
-      setPrescriptions(prescriptionResponse.data);
-    } catch (error) {
-      console.error('Error fetching prescription data:', error);
-      console.error('Error response data:', error.response.data);
-    }
-  };
-
-
-  useEffect(() => {
-    const appointmentNos = myAppointments.map((appointment) => appointment.appointmentNo);
-    if (appointmentNos.length > 0) {
-      fetchPrescriptions(appointmentNos);
-    }
-  }, [myAppointments])
 
 
 
@@ -147,54 +126,104 @@ const fetchMyAppointments = async () => {
 
 
                                 {myAppointments.map((appointment, index) => {
+  let fullName = `${appointment.firstName} ${appointment.lastName}`;
 
-let fullName = appointment.firstName +` `+ appointment.lastName;
-const prescription = prescriptions.find((p) => p.appointmentNo === appointment.appointmentNo);
+ {/* const handleRowClick = async (appointment) => {
+  try {
+    const appointmentNo = appointment.appointmentNo;
 
-                                    return (
+    // Make a request to fetch prescription details
+    const response = await axios.get(`${config.baseUrl}/prescriptions/${appointmentNo}`);
 
-
-                                        <tr className="py-2 w-full" key={index}>
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {index+1}
-                                            </td>
-
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {fullName}
-                                            </td>
-
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                {appointment.doctor}
-                                            </td>
-
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
-                                                City Hospital
-                                            </td>
-
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20" >
-                                                {appointment.date}
-                                            </td>
-
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20" >
-                                                {appointment.referenceNo}
-                                            </td>
-
-                                            <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20 text-center" >
-                                                <FontAwesomeIcon 
-                                               onClick={() => console.log(prescription)}
-                                                icon={faDownload} className="cursor-pointer hover:text-[#627BFE]"/>
-                                            </td>
-                                        </tr>
+    if (response.data) {
+      console.log('Prescription found:', response.data);
+    } else {
+      console.log('Prescription not found for appointmentNo:', appointmentNo);
+    }
+  } catch (error) {
+    console.error('Error fetching prescription details:', error);
+  }
+}; */}
 
 
-                                    );
+
+const handleRowClick = async (appointment) => {
+  try {
+    const appointmentNo = appointment.appointmentNo;
+
+    // Make a request to fetch prescription details
+    const response = await axios.get(`${config.baseUrl}/prescriptions/${appointmentNo}`);
+
+    if (response.data) {
+      console.log('Prescription found:', response.data);
+
+      // Create a Blob with the prescription data
+      const blob = new Blob([JSON.stringify(response.data, null, 2)], { type: 'text/plain' });
+
+      // Create a temporary link element and trigger a download
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `prescription_${appointmentNo}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      console.log('Prescription not found for appointmentNo:', appointmentNo);
+    }
+  } catch (error) {
+    console.error('Error fetching prescription details:', error);
+  }
+};
 
 
-                                })}
+  return (
+    <tr 
+       onClick={() => handleRowClick(appointment)}
+      className="py-2 w-full" 
+      key={index}
+    >
+      <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
+        {index + 1}
+      </td>
+
+      <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
+        {fullName}
+      </td>
+
+      <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
+        {appointment.doctor}
+      </td>
+
+      <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20">
+        City Hospital
+      </td>
+
+      <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20" >
+        {appointment.date}
+      </td>
+
+      <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20" >
+        {appointment.referenceNo}
+      </td>
+
+      <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20 text-center" >
+        <FontAwesomeIcon 
+          icon={faDownload} 
+          className="cursor-pointer hover:text-[#627BFE]"
+        />
+      </td>
+    </tr>
+  );
+})}
+
 
 
                             </table>
+
+                            
                         </div>
+
+                        
                     </div>
                 </div>
             </div>

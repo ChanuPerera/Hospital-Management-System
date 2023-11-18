@@ -112,7 +112,7 @@ function DoctorDashboard() {
           // Include the selected appointment data
         });
         console.log(response.data.message);
-        console.log(response.data.count);
+        // console.log(response.data.count);
         // You can also do something with the prescription data if needed
       }
     } catch (error) {
