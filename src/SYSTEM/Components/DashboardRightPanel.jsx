@@ -5,6 +5,11 @@ import config from '../../config';
 import user from "../Assets/Images/user.png";
 import Calendar from './Calendar';
 
+
+
+
+
+
 function DashboardRightPanel({ userID}) {
 
 
@@ -12,6 +17,16 @@ function DashboardRightPanel({ userID}) {
 
 
 
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+      const userJSON = localStorage.getItem('userData');
+      if (userJSON) {
+        const user = JSON.parse(userJSON);
+        setUserData(user);
+      }
+    }, []);
+  
 
 
 
@@ -59,9 +74,15 @@ function DashboardRightPanel({ userID}) {
                 <div className='user-info w-full border-[1px] border-[#565656] border-opacity-20 rounded-lg p-5'>
                     <div className='flex flex-row justify-between items-center'>
                         <div className='user flex flex-col spce-y-2'>
-                            <h4 className='text-[#565656]'>Amali
-                                Gunathilake</h4>
-                            <h4 className='text-[#565656]'>User ID : { userID }</h4>
+                            
+          {userData && (
+        <div>
+          <p>User ID: {userData.userID}</p>
+          <p>User Role: {userData.role}</p>
+          {/* Add other user data fields as needed */}
+        </div>
+      )}
+
                         </div>
                         <div className=' w-[80px] h-[80px] rounded-full relative object-center'>
                             <img src={user} alt='' className='w-full h-full object-cover rounded-full' />

@@ -71,6 +71,42 @@ const [errorMessage, setErrorMessage] = useState('');
 
 
 
+// const handleLogin = async (values) => {
+//   try {
+//     const response = await axios.post(`${config.baseUrl}/login`, {
+//       userID: values.userID,
+//       password: values.password,
+//     });
+
+//     if (response.data.message === 'UserID and password are matching') {
+//       document.getElementById('info-message').innerText = "User Verified!";
+//       document.getElementById('error-message').innerText = "";
+//       console.log(`UserID and password are matching. Role: ${response.data.role}`);
+
+//       // Save token and user role to localStorage
+//       localStorage.setItem('userRole', response.data.role);
+//       localStorage.setItem('token', response.data.token);
+
+//       // Redirect based on the user role
+//       const userRole = response.data.role;
+//       if (userRole === 'admin') {
+//         window.location.href = '/AdminDashboard';
+//       } else if (userRole === 'doctor') {
+//         window.location.href = '/DoctorDashboard';
+//       }
+//     } else if(response.data.message === 'Invalid User ID'){
+//       document.getElementById('error-message').innerText = "Invalid UserID";
+//     }else if (response.data.message === 'Invalid Password') {
+//       document.getElementById('error-message').innerText = "Invalid Password";
+//     }
+//   } catch (error) {
+//     console.error('Login error:', error);
+//   }
+// };
+
+
+
+
 const handleLogin = async (values) => {
   try {
     const response = await axios.post(`${config.baseUrl}/login`, {
@@ -79,11 +115,19 @@ const handleLogin = async (values) => {
     });
 
     if (response.data.message === 'UserID and password are matching') {
+      document.getElementById('info-message').innerText = "User Verified!";
+      document.getElementById('error-message').innerText = "";
       console.log(`UserID and password are matching. Role: ${response.data.role}`);
 
       // Save token and user role to localStorage
       localStorage.setItem('userRole', response.data.role);
       localStorage.setItem('token', response.data.token);
+
+      // Save user data to localStorage
+      localStorage.setItem('userData', JSON.stringify({
+        userID: response.data.userID,
+        role: response.data.role,
+      }));
 
       // Redirect based on the user role
       const userRole = response.data.role;
@@ -92,15 +136,16 @@ const handleLogin = async (values) => {
       } else if (userRole === 'doctor') {
         window.location.href = '/DoctorDashboard';
       }
-    } else {
-      console.error('Invalid User ID or password');
-      const error = response.data.error || 'Invalid User ID or password';
-      setErrorMessage(error);
+    } else if(response.data.message === 'Invalid User ID'){
+      document.getElementById('error-message').innerText = "Invalid UserID";
+    } else if (response.data.message === 'Invalid Password') {
+      document.getElementById('error-message').innerText = "Invalid Password";
     }
   } catch (error) {
     console.error('Login error:', error);
   }
 };
+
 
 
 
@@ -217,7 +262,8 @@ const handleLogin = async (values) => {
                 Login
               </button>
 
-                     
+              <span id="info-message" className="text-green-600 text-[12px] mt-1 mx-auto"></span>
+              <span id="error-message" className="text-red-600 text-[12px] mt-1 mx-auto"></span>
               
 
             </Form>

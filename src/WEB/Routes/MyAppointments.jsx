@@ -53,7 +53,7 @@ const fetchMyAppointments = async () => {
           appointmentNos: response.data.appointmentNos,
         });
   
-        console.log('Appointment details for the current user:', appointmentsDetails.data);
+        console.log('Web Appointment details for the current user:', appointmentsDetails.data);
         setMyAppointments(appointmentsDetails.data);
       }
     } catch (error) {
@@ -65,6 +65,48 @@ const fetchMyAppointments = async () => {
   useEffect(() => {
     fetchMyAppointments();
   }, []);
+
+
+
+
+  // const handleDownloadButtonClick = async (appointmentNo) => {
+  //   try {
+  //     // Fetch prescription data based on the appointmentNo
+  //     const prescriptionResponse = await axios.get(`${config.baseUrl}/prescriptions/byAppointmentNo/${appointmentNo}`);
+
+  //     console.log('Prescription details for the current user:', prescriptionResponse.data);
+  //     // Now you have the prescription details, you can do something with it
+  //   } catch (error) {
+  //     console.error('Error fetching prescription data:', error);
+  //     console.error('Error response data:', error.response.data);
+  //   }
+  // };
+
+
+
+  const [prescriptions, setPrescriptions] = useState([]);
+  const fetchPrescriptions = async (appointmentNos) => {
+    try {
+      const prescriptionResponse = await axios.get(`${config.baseUrl}/prescriptions/byAppointmentNos`, {
+        appointmentNos,
+      });
+
+      console.log('Prescription details for the current user:', prescriptionResponse.data);
+      setPrescriptions(prescriptionResponse.data);
+    } catch (error) {
+      console.error('Error fetching prescription data:', error);
+      console.error('Error response data:', error.response.data);
+    }
+  };
+
+
+  useEffect(() => {
+    const appointmentNos = myAppointments.map((appointment) => appointment.appointmentNo);
+    if (appointmentNos.length > 0) {
+      fetchPrescriptions(appointmentNos);
+    }
+  }, [myAppointments])
+
 
 
     return (
@@ -107,7 +149,7 @@ const fetchMyAppointments = async () => {
                                 {myAppointments.map((appointment, index) => {
 
 let fullName = appointment.firstName +` `+ appointment.lastName;
-
+const prescription = prescriptions.find((p) => p.appointmentNo === appointment.appointmentNo);
 
                                     return (
 
@@ -138,7 +180,9 @@ let fullName = appointment.firstName +` `+ appointment.lastName;
                                             </td>
 
                                             <td className="py-2 px-2 border-collapse border-r-[1px] border-[#565656] border-opacity-20 text-center" >
-                                                <FontAwesomeIcon icon={faDownload} className="cursor-pointer hover:text-[#627BFE]"/>
+                                                <FontAwesomeIcon 
+                                               onClick={() => console.log(prescription)}
+                                                icon={faDownload} className="cursor-pointer hover:text-[#627BFE]"/>
                                             </td>
                                         </tr>
 

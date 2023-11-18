@@ -32,63 +32,6 @@ const navigate = useNavigate();
   });
 
 
-  // const handleLogin = async (values) => {
-  //   try {
-  //     const response = await axios.post(`${config.baseUrl}/login`, {
-  //       userID: values.userID,
-  //       password: values.password,
-  //       role: values.role,
-  //     });
-
-  //     const userRole = response.data.role;
-
-  //     // Set the user's role to local storage or a state variable
-  //     localStorage.setItem("userRole", userRole);
-
-  //     // Navigate to the SystemRoutes component, which will handle the route navigation
-  //     navigate("/SystemRoutes");
-  //   } catch (error) {
-  //     // Handle login error
-  //     console.error("Login error:", error);
-  //     // Display an error message to the user
-  //   }
-  // }
- 
-
-
-
-
-
-
-  // const handleLogin = async (values) => {
-  //   try {
-  //     const response = await axios.post(`${config.baseUrl}/login`, {
-  //       userID: values.userID,
-  //     });
-  
-  //     const userRole = response.data.role;
-  //     const message = response.data.message;
-  
-  //     if (message === 'User found') {
-  //       // User found, display the role
-  //       console.log(`User Role: ${userRole}`);
-  
-  //       // Set the user's role to local storage or a state variable if needed
-  //     } else {
-  //       // Handle login error
-  //       console.error("Login error:", message);
-  //       // Display an error message to the user
-  //     }
-  //   } catch (error) {
-  //     // Handle other errors (e.g., network issues)
-  //     console.error("Login error:", error);
-  //     // Display an error message to the user
-  //   }
-  // }
-
-
-
-
   const handleAddNewRole = async (values) => {
     try {
         console.log('Form Data:', values);

@@ -203,17 +203,18 @@ const SideNav = () => {
   
   const handleSignout = async () => {
     try {
-      // Remove token and userRole from localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('userRole');
-  
-     
-      window.location.href = '/';
+        // Remove token and userRole from localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+
+        console.log('Token and userRole removed from localStorage.');
+
+        // Redirect to the home page
+        window.location.href = '/';
     } catch (error) {
-      console.error('Signout error:', error);
-      
+        console.error('Signout error:', error);
     }
-  };
+};
 
   return (
 

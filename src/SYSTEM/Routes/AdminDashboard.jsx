@@ -15,7 +15,7 @@ import PatientForm from '../Components/PatientForm';
 import AppointmentForm from '../Components/AppointmentForm';
 import axios from 'axios';
 import config from '../../config';
-
+import { jwtDecode } from "jwt-decode" 
 
 
 
@@ -35,6 +35,26 @@ import config from '../../config';
 function AdminDashboard() {
 
 
+
+
+
+
+
+
+
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const userJSON = localStorage.getItem('userData');
+    if (userJSON) {
+      const user = JSON.parse(userJSON);
+      setUserData(user);
+    }
+  }, []);
+
+
+
+
   const [isPatientFormPopUpOpen, setPatientFormPopUpOpen] = useState(false);
   const [isAppointmentFormPopUpOpen, setAppointmentFormPopUpOpen] = useState(false);
 
@@ -52,6 +72,7 @@ function AdminDashboard() {
   const closeAppointmentFormPopUp = () => {
     setAppointmentFormPopUpOpen(false);
   }
+
 
 
   const [doctors, setDoctors] = useState([]);
@@ -226,6 +247,11 @@ function AdminDashboard() {
                     <h4 className='text-[18pt] text-[#002459]'>{doctorCount}</h4>
                     <span className='text-[#565656] text-[14px]'>Available Doctors</span>
                     
+
+
+                    
+
+
                   </div>
 
                 </div>
@@ -263,16 +289,19 @@ function AdminDashboard() {
           </div>
         </div>
 
+       
 
 
 
         <div className='flex flex-row p-10 justify-start  w-full overflow-y-auto py-5 lg:w-4/6 sm:w-5/6 bg-[#ffffff] mx-auto mb-10' id="style-7">
 
 
-
-
+       
 
           <div className='flex flex-col w-1/2 '>
+
+
+
 
             {doctors.map((doctor, index) => (
               <div className='flex flex-col w-full justify-between pr-5' key={index}>

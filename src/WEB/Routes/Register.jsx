@@ -365,7 +365,7 @@ const handleAddNewWebUser = async (values,  { resetForm }) => {
               <div className="flex flex-col mt-5">
                 <span className="text-[14px]  text-[#1a1a1a]">
                   Already have an account?{" "}
-                  <Link to="/Login">
+                  <Link to="/">
                     <span className="text-[14px]  text-[#627BFE] cursor-pointer">
                         Login
                     </span>
