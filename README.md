@@ -68,3 +68,13 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### User Interface 
+![e-doc web](https://github.com/ChanuPerera/Hospital-Management-System/assets/78588327/2cf89866-51b8-43ac-adfc-362cf9b7e0eb)
+![login](https://github.com/ChanuPerera/Hospital-Management-System/assets/78588327/9b6b2d84-d332-4ce6-8873-99505ed5fa42)
+![dashboard](https://github.com/ChanuPerera/Hospital-Management-System/assets/78588327/ad5b3d9f-6550-43ea-bcb9-d590b4ff50be)
+![Doctor Dashboard](https://github.com/ChanuPerera/Hospital-Management-System/assets/78588327/42d3af7c-e5fe-4b50-9fe3-25c748b2974c)
+![Appoinments](https://github.com/ChanuPerera/Hospital-Management-System/assets/78588327/2b0df6cd-ef88-42df-8001-261a1b174760)
+![Patient details](https://github.com/ChanuPerera/Hospital-Management-System/assets/78588327/604dcab0-29a2-4888-b0ee-a81fb4901dbf)
+
+
