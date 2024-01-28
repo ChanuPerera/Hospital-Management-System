@@ -61,16 +61,16 @@ import Patient from "./Patient";
 import Ward  from "./Ward";
 import Appointment from "./Appointment";
 import Login from "./Login";
-import Register from "./Register";
+import AdminRegister from "./AdminRegister";
 import DoctorDashboard from "./DoctorDashboard";
-
 function SystemRoutes() {
   const userRole = localStorage.getItem('userRole');
 
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="Register" element={<Register />} />
+      <Route path="AdminRegister" element={<AdminRegister />} />
+      {/* <Route path="AdminRegister" element={<AdminRegister />} /> */}
       {userRole === 'admin' ? (
         <>
             <Route path="AdminDashboard" element={<AdminDashboard />} />

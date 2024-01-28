@@ -8,11 +8,12 @@ import axios from 'axios';
 import config from '../../config';
 
 
-function Register() {
+function AdminRegister() {
 
 const navigate = useNavigate();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -89,11 +90,14 @@ const navigate = useNavigate();
 
 
 
-  const handleAddNewRole = async (values) => {
+  const handleAddNewRole = async (values,{ resetForm }) => {
     try {
         console.log('Form Data:', values);
         const response = await axios.post(`${config.baseUrl}/addNewRole`, values);
         console.log('Response:', response.data);
+        
+        setSuccessMessage("Admin Role Registered successfully");
+        resetForm();
 
     } catch (error) {
         console.error('Error:', error);
@@ -254,7 +258,9 @@ const navigate = useNavigate();
                         Register
               </button>
 
-             
+              {successMessage && (
+              <span className="text-green-600 text-[12px] mt-2">{successMessage}</span>
+            )}
             </Form>
           )}
         </Formik>
@@ -271,4 +277,4 @@ const navigate = useNavigate();
   );
 }
 
-export default Register
+export default AdminRegister

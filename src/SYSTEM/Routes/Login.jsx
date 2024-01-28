@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faLock,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import config from '../../config';
-
+import axios from "axios";
+import config from "../../config";
 
 function Login() {
-
   const navigate = useNavigate();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -18,106 +21,93 @@ function Login() {
     setPasswordVisible(!passwordVisible);
   };
 
-
-
   const LoginSchema = Yup.object().shape({
-    userID: Yup.string()
-      .required('Required'),
-    password: Yup.string()
-      .required('Required'),
-
-
+    userID: Yup.string().required("Required"),
+    password: Yup.string().required("Required"),
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // const handleLogin = async (values) => {
+  //   try {
+  //     const response = await axios.post(`${config.baseUrl}/login`, {
+  //       userID: values.userID,
+  //       password: values.password,
+  //     });
+
+  //     if (response.data.message === "UserID and password are matching") {
+  //       console.log(
+  //         `UserID and password are matching. Role: ${response.data.role}`
+  //       );
+
+  //       // Save token and user role to localStorage
+  //       localStorage.setItem("userRole", response.data.role);
+  //       localStorage.setItem("token", response.data.token);
+
+  //       // Redirect based on the user role
+  //       const userRole = response.data.role;
+  //       if (userRole === "admin") {
+  //         window.location.href = "/AdminDashboard";
+  //       } else if (userRole === "doctor") {
+  //         window.location.href = "/DoctorDashboard";
+  //       }
+  //     } else {
+  //       console.error("Invalid User ID or password");
+  //       const error = response.data.error || "Invalid User ID or password";
+  //       setErrorMessage(error);
+  //     }
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //   }
+  // };
 
 
 
-
-const [errorMessage, setErrorMessage] = useState('');
-
-
-
-// const handleLogin = async (values) => {
-//   try {
-//     const response = await axios.post(`${config.baseUrl}/login`, {
-//       userID: values.userID,
-//       password: values.password,
-//     });
-
-//     if (response.data.message === 'UserID and password are matching') {
-//       console.log(`UserID and password are matching. Role: ${response.data.role}`);
-
-//       // Save user role to localStorage
-//       localStorage.setItem('userRole', response.data.role);
-
-//       // Redirect based on the user role
-//       const userRole = response.data.role;
-//       if (userRole === 'admin') {
-//         window.location.href = `/AdminDashboard?userID=${response.data.userID}`;
-//       } else if (userRole === 'doctor') {
-//         window.location.href = `/DoctorDashboard?userID=${response.data.userID}`;
-//       }
-//     } else {
-//       console.error('Invalid User ID or password');
-//       const error = response.data.error || 'Invalid User ID or password';
-//       setErrorMessage(error);
-//     }
-//   } catch (error) {
-//     console.error('Login error:', error);
-//   }
-// };
-
-
-
-
-
-const handleLogin = async (values) => {
-  try {
-    const response = await axios.post(`${config.baseUrl}/login`, {
-      userID: values.userID,
-      password: values.password,
-    });
-
-    if (response.data.message === 'UserID and password are matching') {
-      console.log(`UserID and password are matching. Role: ${response.data.role}`);
-
-      // Save token and user role to localStorage
-      localStorage.setItem('userRole', response.data.role);
-      localStorage.setItem('token', response.data.token);
-
-      // Redirect based on the user role
-      const userRole = response.data.role;
-      if (userRole === 'admin') {
-        window.location.href = '/AdminDashboard';
-      } else if (userRole === 'doctor') {
-        window.location.href = '/DoctorDashboard';
+  const handleLogin = async (values) => {
+    try {
+      const response = await axios.post(`${config.baseUrl}/login`, {
+        userID: values.userID,
+        password: values.password,
+      });
+  
+      if (response.data.userRole) {
+        console.log(`Login successful. Role: ${response.data.userRole}`);
+  
+        // Save token and user role to localStorage
+        localStorage.setItem("userRole", response.data.userRole);
+        localStorage.setItem("token", response.data.token);
+  
+        // Redirect based on the user role
+        const userRole = response.data.userRole;
+        if (userRole === "admin") {
+          window.location.href = "/AdminDashboard";
+        } else if (userRole === "doctor") {
+          window.location.href = "/DoctorDashboard";
+        }
+      } else {
+        console.error("Invalid User ID or password");
+        const error = response.data.error || "Invalid User ID or password";
+        setErrorMessage(error);
       }
-    } else {
-      console.error('Invalid User ID or password');
-      const error = response.data.error || 'Invalid User ID or password';
-      setErrorMessage(error);
+    } catch (error) {
+      console.error("Login error:", error);
     }
-  } catch (error) {
-    console.error('Login error:', error);
-  }
-};
+  };
 
-
-
+  
   return (
-
     <div className="w-full flex flex-col justify-center items-center bg-white h-screen">
       <div className="md:w-[50%] w-[full] flex flex-col p-5 items-center">
         <Link to="/">
           <div className="nav-logo font-link">
-            <span className="text-[6rem]  text-[#627BFE] font-link">City Hospital</span>
+            <span className="text-[6rem]  text-[#627BFE] font-link">
+              City Hospital
+            </span>
           </div>
         </Link>
-        <p className="text-[14px] text-[#1a1a1a] -mt-10">Please Login to Continue</p>
-
-
-
-
+        <p className="text-[14px] text-[#1a1a1a] -mt-10">
+          Please Login to Continue
+        </p>
 
         <Formik
           initialValues={{
@@ -165,7 +155,9 @@ const handleLogin = async (values) => {
 
               <div className="form-field-container flex flex-col sm:mt-5 mt-2 space-y-2 w-full">
                 <div className="form-field-label flex justify-between w-full">
-                  <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">Password</span>
+                  <span className="text-[#1a1a1a] text-[12px] uppercase font-semibold">
+                    Password
+                  </span>
                   <ErrorMessage
                     name="password"
                     component="span"
@@ -180,7 +172,7 @@ const handleLogin = async (values) => {
                   </div>
                   <Field
                     className="form-field-input w-[90%] h-full p-2 bg-transparent outline-none text-[#1a1a1a] text-[12px]"
-                    type={passwordVisible ? 'text' : 'password'}
+                    type={passwordVisible ? "text" : "password"}
                     name="password"
                     value={values.password}
                     onChange={handleChange}
@@ -212,28 +204,24 @@ const handleLogin = async (values) => {
               </div>
 
               <button
-               
-                type="submit" className="w-full h-[44px] rounded-md text-white text-[16px] bg-gradient-to-r from-[#627BFE] to-[#3D56DA] mt-5">
+                type="submit"
+                className="w-full h-[44px] rounded-md text-white text-[16px] bg-gradient-to-r from-[#627BFE] to-[#3D56DA] mt-5"
+              >
                 Login
               </button>
-
-                     
-              
-
+              <div className="text-center w-full">
+                <Link to="/AdminRegister">
+                  <span className="text-[14px]  text-[#627BFE] cursor-pointer">
+                    Register Now
+                  </span>
+                </Link>
+              </div>
             </Form>
           )}
         </Formik>
-
-
-
-
       </div>
-
-
-
-
     </div>
   );
 }
 
-export default Login
+export default Login;
